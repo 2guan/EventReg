@@ -1,0 +1,7 @@
+{
+    "usingComponents": {
+        "message-center": "/components/message-center/message-center",
+        "empty": "/components/empty/empty"
+    },
+    "navigationBarTitleText": "有熊来集"
+}

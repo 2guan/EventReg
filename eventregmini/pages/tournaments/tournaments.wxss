@@ -1,0 +1,211 @@
+/**
+ * 全部活动页面样式
+ * 与网页版 Tournaments.tsx 样式完全一致
+ */
+
+.page {
+  min-height: 100vh;
+  background-color: #f9fafb;
+  display: flex;
+  flex-direction: column;
+}
+
+.page.dark {
+  background-color: #111827;
+}
+
+/* 顶部导航 */
+.header {
+  position: sticky;
+  top: 0;
+  z-index: 30;
+  background-color: #ffffff;
+  padding: 24rpx 32rpx;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-shadow: 0 2rpx 4rpx rgba(0, 0, 0, 0.05);
+}
+
+.dark .header {
+  background-color: #1f2937;
+}
+
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: 8rpx;
+}
+
+.header-title {
+  font-size: 36rpx;
+  font-weight: 700;
+  color: #1f2937;
+}
+
+.dark .header-title {
+  color: #ffffff;
+}
+
+.header-tab {
+  display: flex;
+  align-items: center;
+  padding: 10rpx 20rpx;
+  border-radius: 32rpx;
+  font-size: 30rpx;
+  font-weight: 600;
+  color: #6b7280;
+  background-color: transparent;
+  transition: all 0.2s;
+}
+
+.dark .header-tab {
+  color: #9ca3af;
+}
+
+.header-tab.active {
+  color: #1f2937;
+  background-color: #f3f4f6;
+}
+
+.dark .header-tab.active {
+  color: #ffffff;
+  background-color: #374151;
+}
+
+.header-tab .arrow-icon {
+  font-size: 16rpx;
+  margin-left: 4rpx;
+  opacity: 0.6;
+}
+
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 16rpx;
+}
+
+.theme-btn {
+  width: 80rpx;
+  height: 80rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+}
+
+.theme-btn:active {
+  background-color: #f3f4f6;
+}
+
+.dark .theme-btn:active {
+  background-color: #374151;
+}
+
+.theme-btn text {
+  font-size: 40rpx;
+}
+
+/* 筛选区域 */
+.filter-container {
+  background-color: #ffffff;
+  padding: 16rpx 24rpx;
+  border-bottom: 2rpx solid #f3f4f6;
+}
+
+.dark .filter-container {
+  background-color: #1f2937;
+  border-bottom-color: #374151;
+}
+
+.filter-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12rpx;
+  margin-bottom: 12rpx;
+}
+
+.filter-row:last-child {
+  margin-bottom: 0;
+}
+
+.filter-chip {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12rpx 24rpx;
+  border-radius: 32rpx;
+  background-color: #f3f4f6;
+  font-size: 26rpx;
+  color: #4b5563;
+  transition: all 0.2s;
+}
+
+.dark .filter-chip {
+  background-color: #374151;
+  color: #9ca3af;
+}
+
+.filter-chip.small {
+  padding: 8rpx 18rpx;
+  font-size: 24rpx;
+}
+
+.filter-chip.active {
+  background-color: #ef4444;
+  color: #ffffff;
+}
+
+.filter-chip:active {
+  opacity: 0.8;
+}
+
+.arrow-icon {
+  font-size: 18rpx;
+  margin-left: 6rpx;
+  opacity: 0.7;
+}
+
+.status-filter {
+  animation: slideDown 0.2s ease-out;
+}
+
+/* 主内容区 */
+.main-content {
+  flex: 1;
+  padding: 24rpx 32rpx;
+  padding-bottom: 160rpx;
+}
+
+/* 活动列表 */
+.tournament-list {
+  /* 列表容器 */
+}
+
+/* 加载状态 */
+.loading-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 128rpx;
+}
+
+.loading-spinner {
+  width: 80rpx;
+  height: 80rpx;
+  border: 6rpx solid #e5e7eb;
+  border-top-color: #ef4444;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* 底部安全区域 */
+.bottom-safe-area {
+  height: 180rpx;
+  padding-bottom: constant(safe-area-inset-bottom);
+  padding-bottom: env(safe-area-inset-bottom);
+}

@@ -1,0 +1,166 @@
+<!-- 活动日志页面 -->
+<wxs module="filters">
+module.exports = {
+  filterLogs: function(logs, keyword) {
+    if (!keyword || !logs) return logs;
+    var kw = keyword.toLowerCase();
+    return logs.filter(function(log) {
+      return log.username.toLowerCase().indexOf(kw) > -1 ||
+             log.nickname.toLowerCase().indexOf(kw) > -1 ||
+             log.enrolledForName.toLowerCase().indexOf(kw) > -1 ||
+             log.matchTitle.toLowerCase().indexOf(kw) > -1;
+    });
+  }
+}
+</wxs>
+
+<view class="page {{theme}}">
+  <!-- 顶部导航 -->
+  <view class="header">
+    <view class="back-btn" bindtap="goBack">
+      <text>←</text>
+    </view>
+    <text class="header-title">活动日志</text>
+    <view class="header-right">
+      <!-- 管理员提醒按钮 -->
+      <view class="reminder-btn" bindtap="showReminderDialog" wx:if="{{userInfo && userInfo.role === 'admin'}}">
+        <text>🔔</text>
+      </view>
+      
+      <view class="refresh-btn" bindtap="fetchData">
+        <text>↻</text>
+      </view>
+      <view class="clear-btn" bindtap="handleClearLogs">
+        <text>🗑️</text>
+      </view>
+      <view class="filter-btn {{showFilters ? 'active' : ''}}" bindtap="toggleFilters">
+        <text>🔍</text>
+      </view>
+    </view>
+  </view>
+
+
+  <!-- 筛选面板 -->
+  <view wx:if="{{showFilters}}" class="filter-panel">
+    <view class="filter-row">
+      <!-- 活动筛选 -->
+      <view class="filter-item">
+        <text class="filter-label">活动</text>
+        <picker mode="selector" range="{{matchOptions}}" range-key="title" bindchange="onFilterMatchChange">
+          <view class="filter-picker">
+            <text>{{filterMatchId ? selectedMatchTitle : '全部活动'}}</text>
+          </view>
+        </picker>
+      </view>
+
+      <!-- 操作类型 -->
+      <view class="filter-item">
+        <text class="filter-label">操作类型</text>
+        <picker mode="selector" range="{{['全部', '报名', '取消报名']}}" bindchange="onFilterOperationChange">
+          <view class="filter-picker">
+            <text>{{filterOperation === 'join' ? '报名' : (filterOperation === 'cancel' ? '取消报名' : '全部')}}</text>
+          </view>
+        </picker>
+      </view>
+    </view>
+
+    <!-- 关键词搜索 -->
+    <view class="filter-search">
+      <input 
+        class="search-input" 
+        placeholder="搜索用户名/昵称/活动名" 
+        value="{{filterKeyword}}"
+        bindinput="onKeywordInput"
+      />
+    </view>
+
+    <!-- 操作按钮 -->
+    <view class="filter-actions">
+      <button class="btn-filter" bindtap="handleFilter">筛选</button>
+      <button class="btn-clear" bindtap="clearFilters">清除</button>
+    </view>
+  </view>
+
+  <!-- 加载状态 -->
+  <view wx:if="{{loading}}" class="loading-container">
+    <view class="loading-spinner"></view>
+  </view>
+
+  <!-- 日志列表 -->
+  <view wx:else class="log-list">
+    <block wx:for="{{filters.filterLogs(logs, filterKeyword)}}" wx:key="id">
+      <view class="log-card">
+        <!-- 头部：用户信息和操作类型 -->
+        <view class="log-header">
+          <view class="user-info">
+            <text class="user-nickname">{{item.nickname}}</text>
+            <text class="operation-tag {{item.operation === 'join' ? 'join' : 'cancel'}}">{{item.operationText}}</text>
+          </view>
+          <text class="record-time">{{item.formattedRecordTime}}</text>
+        </view>
+
+        <!-- 详细信息 -->
+        <view class="log-details">
+          <view class="detail-row">
+            <text class="detail-label">用户名:</text>
+            <text class="detail-value">{{item.username}}</text>
+          </view>
+          <view class="detail-row">
+            <text class="detail-label">报名人:</text>
+            <text class="detail-value">{{item.enrolledForName}}</text>
+          </view>
+          <view class="detail-row">
+            <text class="detail-label">活动:</text>
+            <text class="detail-value activity-name">{{item.matchTitle}}</text>
+          </view>
+          <view class="detail-row">
+            <text class="detail-label">活动时间:</text>
+            <text class="detail-value">{{item.formattedMatchTime}}</text>
+          </view>
+          <view class="detail-row">
+            <text class="detail-label">报名时间:</text>
+            <text class="detail-value">{{item.formattedEnrollTime}}</text>
+          </view>
+        </view>
+      </view>
+    </block>
+
+    <!-- 空状态 -->
+    <view wx:if="{{logs.length === 0}}" class="empty-state">
+      <text>暂无日志数据</text>
+    </view>
+
+    <!-- 统计 -->
+    <view class="stats">
+      <text>共 {{filters.filterLogs(logs, filterKeyword).length}} 条记录</text>
+    </view>
+  </view>
+
+  <!-- 管理员提醒弹窗 -->
+  <view wx:if="{{showReminderDialog}}" class="reminder-dialog-overlay" bindtap="hideReminderDialog">
+    <view class="reminder-dialog" catchtap="preventClose">
+      <view class="dialog-header">
+        <text class="dialog-title">管理员提醒</text>
+        <view class="dialog-close" bindtap="hideReminderDialog">
+          <text>×</text>
+        </view>
+      </view>
+      <view class="dialog-content">
+        <text class="dialog-desc">选择您要订阅的提醒类型：</text>
+        <view class="reminder-options">
+          <view class="reminder-option" bindtap="subscribeReminder" data-type="join">
+            <text class="option-icon">📢</text>
+            <text class="option-label">报名提醒</text>
+            <text class="option-count" wx:if="{{reminderStatus.join > 0}}">(剩余{{reminderStatus.join}}次)</text>
+          </view>
+          <view class="reminder-option" bindtap="subscribeReminder" data-type="cancel">
+            <text class="option-icon">🔔</text>
+            <text class="option-label">退报提醒</text>
+            <text class="option-count" wx:if="{{reminderStatus.cancel > 0}}">(剩余{{reminderStatus.cancel}}次)</text>
+          </view>
+        </view>
+      </view>
+    </view>
+  </view>
+</view>
+

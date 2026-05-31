@@ -1,0 +1,412 @@
+/**
+ * 注册页面样式
+ * 与网页版 Register.tsx 样式完全一致
+ */
+
+.page {
+  min-height: 100vh;
+  background-color: #f9fafb;
+}
+
+.page.dark {
+  background-color: #111827;
+}
+
+/* 顶部导航 */
+.header {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  background-color: #ffffff;
+  padding: 24rpx 32rpx;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-shadow: 0 2rpx 4rpx rgba(0, 0, 0, 0.05);
+}
+
+.dark .header {
+  background-color: #1f2937;
+}
+
+.back-btn,
+.theme-btn {
+  width: 80rpx;
+  height: 80rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+}
+
+.back-btn:active,
+.theme-btn:active {
+  background-color: #f3f4f6;
+}
+
+.dark .back-btn:active,
+.dark .theme-btn:active {
+  background-color: #374151;
+}
+
+.icon-back {
+  font-size: 40rpx;
+  color: #1f2937;
+}
+
+.dark .icon-back {
+  color: #ffffff;
+}
+
+.icon-theme {
+  font-size: 40rpx;
+}
+
+.header-title {
+  font-size: 36rpx;
+  font-weight: 700;
+  color: #1f2937;
+}
+
+.dark .header-title {
+  color: #ffffff;
+}
+
+/* 主内容区 */
+.main-content {
+  height: calc(100vh - 120rpx);
+  padding: 32rpx 48rpx;
+}
+
+/* 副标题 */
+.subtitle-section {
+  text-align: center;
+  margin-bottom: 48rpx;
+}
+
+.subtitle-text {
+  font-size: 28rpx;
+  color: #6b7280;
+}
+
+.dark .subtitle-text {
+  color: #9ca3af;
+}
+
+/* 头像选择区域 */
+.avatar-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 48rpx;
+}
+
+.avatar-wrapper {
+  position: relative;
+  width: 192rpx;
+  height: 192rpx;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 8rpx solid #ffffff;
+  box-shadow: 0 8rpx 16rpx rgba(0, 0, 0, 0.1);
+}
+
+.dark .avatar-wrapper {
+  border-color: #1f2937;
+}
+
+.avatar-image {
+  width: 100%;
+  height: 100%;
+}
+
+.avatar-overlay {
+  position: absolute;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+
+.avatar-wrapper:active .avatar-overlay {
+  opacity: 1;
+}
+
+.overlay-text {
+  color: #ffffff;
+  font-size: 24rpx;
+  font-weight: 700;
+}
+
+.avatar-hint {
+  font-size: 28rpx;
+  color: #6b7280;
+  margin-top: 16rpx;
+}
+
+.dark .avatar-hint {
+  color: #9ca3af;
+}
+
+/* 表单区域 */
+.form-section {
+  width: 100%;
+}
+
+.form-item {
+  margin-bottom: 32rpx;
+}
+
+.form-label {
+  display: block;
+  font-size: 28rpx;
+  font-weight: 500;
+  margin-bottom: 8rpx;
+  color: #1f2937;
+}
+
+.dark .form-label {
+  color: #e5e7eb;
+}
+
+.input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.form-input {
+  width: 100%;
+  padding: 28rpx 32rpx;
+  padding-right: 80rpx;
+  min-height: 96rpx;
+  border-radius: 24rpx;
+  border: 2rpx solid #e5e7eb;
+  background-color: #ffffff;
+  font-size: 28rpx;
+  color: #1f2937;
+  box-sizing: border-box;
+}
+
+.dark .form-input {
+  background-color: #1f2937;
+  border-color: #374151;
+  color: #ffffff;
+}
+
+.form-input-placeholder {
+  color: #9ca3af;
+  font-size: 28rpx;
+}
+
+.input-wrapper.input-error .form-input {
+  border-color: #ef4444;
+}
+
+.toggle-password {
+  position: absolute;
+  right: 24rpx;
+  top: 50%;
+  transform: translateY(-50%);
+  padding: 8rpx;
+}
+
+.toggle-password text {
+  font-size: 40rpx;
+}
+
+.error-text {
+  display: block;
+  font-size: 24rpx;
+  color: #ef4444;
+  margin-top: 8rpx;
+}
+
+/* 注册按钮 */
+.submit-btn {
+  width: 100%;
+  padding: 24rpx;
+  border-radius: 24rpx;
+  background: linear-gradient(to right, #ef4444, #fb923c);
+  color: #ffffff;
+  font-size: 32rpx;
+  font-weight: 500;
+  border: none;
+  margin-top: 16rpx;
+}
+
+.submit-btn::after {
+  border: none;
+}
+
+.submit-btn[disabled] {
+  opacity: 0.7;
+}
+
+.submit-btn:active {
+  opacity: 0.9;
+}
+
+/* 登录链接 */
+.login-link {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 48rpx;
+}
+
+.login-text {
+  font-size: 28rpx;
+  color: #6b7280;
+}
+
+.dark .login-text {
+  color: #9ca3af;
+}
+
+.login-action {
+  font-size: 28rpx;
+  color: #ef4444;
+  font-weight: 500;
+  margin-left: 8rpx;
+}
+
+.login-action:active {
+  color: #dc2626;
+}
+
+/* 用户协议 */
+.agreement {
+  text-align: center;
+  margin-top: 48rpx;
+  font-size: 24rpx;
+  color: #6b7280;
+  padding-bottom: 48rpx;
+}
+
+.dark .agreement {
+  color: #9ca3af;
+}
+
+.agreement .link {
+  color: #ef4444;
+  margin: 0 8rpx;
+}
+
+/* 头像选择模态框 */
+.avatar-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 32rpx;
+}
+
+.avatar-modal {
+  width: 100%;
+  max-width: 640rpx;
+  max-height: 80vh;
+  background-color: #ffffff;
+  border-radius: 32rpx;
+  padding: 32rpx;
+  overflow: hidden;
+}
+
+.dark .avatar-modal {
+  background-color: #1f2937;
+}
+
+.modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 32rpx;
+}
+
+.modal-title {
+  font-size: 40rpx;
+  font-weight: 700;
+  color: #1f2937;
+}
+
+.dark .modal-title {
+  color: #ffffff;
+}
+
+.modal-close {
+  width: 64rpx;
+  height: 64rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.modal-close text {
+  font-size: 56rpx;
+  color: #6b7280;
+}
+
+/* 微信头像按钮 */
+.wx-avatar-section {
+  margin-bottom: 24rpx;
+}
+
+.wx-avatar-btn {
+  width: 100%;
+  padding: 20rpx;
+  border-radius: 16rpx;
+  background-color: #07c160;
+  color: #ffffff;
+  font-size: 28rpx;
+  border: none;
+}
+
+.wx-avatar-btn::after {
+  border: none;
+}
+
+/* 头像网格 */
+.avatar-grid-wrapper {
+  max-height: 50vh;
+}
+
+.avatar-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 24rpx;
+}
+
+.avatar-item {
+  position: relative;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 4rpx solid transparent;
+}
+
+.avatar-item.selected {
+  border-color: #ef4444;
+}
+
+.avatar-option {
+  width: 100%;
+  height: 100%;
+}
+
+.avatar-check {
+  position: absolute;
+  inset: 0;
+  background-color: rgba(239, 68, 68, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #ef4444;
+  font-size: 40rpx;
+  font-weight: 700;
+}

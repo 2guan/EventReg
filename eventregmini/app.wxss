@@ -1,0 +1,664 @@
+/**
+ * 有熊来集 - 小程序全局样式
+ * 与网页版保持100%一致的颜色配置
+ */
+
+/* ==================== CSS变量定义 ==================== */
+page {
+  /* 主题色 */
+  --color-primary: #ef4444;
+  --color-primary-light: #fca5a5;
+  --color-primary-dark: #dc2626;
+  --color-secondary: #fb923c;
+  
+  /* 渐变色 */
+  --gradient-primary: linear-gradient(to right, #ef4444, #fb923c);
+  
+  /* 灰色系 */
+  --color-gray-50: #f9fafb;
+  --color-gray-100: #f3f4f6;
+  --color-gray-200: #e5e7eb;
+  --color-gray-300: #d1d5db;
+  --color-gray-400: #9ca3af;
+  --color-gray-500: #6b7280;
+  --color-gray-600: #4b5563;
+  --color-gray-700: #374151;
+  --color-gray-800: #1f2937;
+  --color-gray-900: #111827;
+  
+  /* 状态色 - 蓝色 */
+  --color-blue-100: #dbeafe;
+  --color-blue-200: #bfdbfe;
+  --color-blue-300: #93c5fd;
+  --color-blue-600: #2563eb;
+  --color-blue-800: #1e40af;
+  --color-blue-900: #1e3a8a;
+  
+  /* 状态色 - 绿色 */
+  --color-green-100: #dcfce7;
+  --color-green-200: #bbf7d0;
+  --color-green-500: #22c55e;
+  --color-green-600: #16a34a;
+  --color-green-800: #166534;
+  --color-green-900: #14532d;
+  
+  /* 状态色 - 黄色 */
+  --color-yellow-100: #fef9c3;
+  --color-yellow-200: #fef08a;
+  --color-yellow-500: #eab308;
+  --color-yellow-600: #ca8a04;
+  --color-yellow-800: #854d0e;
+  --color-yellow-900: #713f12;
+  
+  /* 状态色 - 紫色 */
+  --color-purple-100: #f3e8ff;
+  --color-purple-200: #e9d5ff;
+  --color-purple-500: #a855f7;
+  --color-purple-600: #9333ea;
+  --color-purple-800: #6b21a8;
+  --color-purple-900: #581c87;
+  
+  /* 状态色 - 橙色 */
+  --color-orange-100: #ffedd5;
+  --color-orange-200: #fed7aa;
+  --color-orange-500: #f97316;
+  --color-orange-600: #ea580c;
+  --color-orange-800: #9a3412;
+  --color-orange-900: #7c2d12;
+  
+  /* 状态色 - 靛蓝 */
+  --color-indigo-100: #e0e7ff;
+  --color-indigo-200: #c7d2fe;
+  --color-indigo-600: #4f46e5;
+  --color-indigo-800: #3730a3;
+  --color-indigo-900: #312e81;
+  
+  /* 状态色 - 红色 */
+  --color-red-100: #fee2e2;
+  --color-red-200: #fecaca;
+  --color-red-500: #ef4444;
+  --color-red-600: #dc2626;
+  --color-red-800: #991b1b;
+  --color-red-900: #7f1d1d;
+  
+  /* 基础样式 */
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+  font-size: 28rpx;
+  line-height: 1.5;
+  color: var(--color-gray-900);
+  background-color: var(--color-gray-50);
+  
+  /* 防止页面溢出 */
+  width: 100%;
+  max-width: 100vw;
+  overflow-x: hidden;
+  box-sizing: border-box;
+}
+
+/* 暗色模式 */
+page.dark {
+  --bg-primary: #111827;
+  --bg-secondary: #1f2937;
+  --text-primary: #ffffff;
+  --text-secondary: #9ca3af;
+  --border-color: #374151;
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+}
+
+/* ==================== 全局box-sizing ==================== */
+view, text, image, input, textarea, button, scroll-view {
+  box-sizing: border-box;
+}
+
+/* ==================== 通用布局类 ==================== */
+.container {
+  width: 100%;
+  padding: 0 32rpx;
+  box-sizing: border-box;
+}
+
+.flex {
+  display: flex;
+}
+
+.flex-1 {
+  flex: 1;
+}
+
+.flex-col {
+  flex-direction: column;
+}
+
+.flex-row {
+  flex-direction: row;
+}
+
+.items-center {
+  align-items: center;
+}
+
+.items-start {
+  align-items: flex-start;
+}
+
+.items-end {
+  align-items: flex-end;
+}
+
+.justify-center {
+  justify-content: center;
+}
+
+.justify-between {
+  justify-content: space-between;
+}
+
+.justify-start {
+  justify-content: flex-start;
+}
+
+.justify-end {
+  justify-content: flex-end;
+}
+
+.flex-wrap {
+  flex-wrap: wrap;
+}
+
+.space-x-2 > view + view,
+.space-x-2 > text + text {
+  margin-left: 16rpx;
+}
+
+.space-x-3 > view + view,
+.space-x-3 > text + text {
+  margin-left: 24rpx;
+}
+
+.space-x-4 > view + view,
+.space-x-4 > text + text {
+  margin-left: 32rpx;
+}
+
+.space-y-2 > view + view {
+  margin-top: 16rpx;
+}
+
+.space-y-3 > view + view {
+  margin-top: 24rpx;
+}
+
+.space-y-4 > view + view {
+  margin-top: 32rpx;
+}
+
+/* ==================== 间距类 ==================== */
+.p-2 { padding: 16rpx; }
+.p-3 { padding: 24rpx; }
+.p-4 { padding: 32rpx; }
+.p-5 { padding: 40rpx; }
+.p-6 { padding: 48rpx; }
+
+.px-2 { padding-left: 16rpx; padding-right: 16rpx; }
+.px-3 { padding-left: 24rpx; padding-right: 24rpx; }
+.px-4 { padding-left: 32rpx; padding-right: 32rpx; }
+
+.py-1 { padding-top: 8rpx; padding-bottom: 8rpx; }
+.py-2 { padding-top: 16rpx; padding-bottom: 16rpx; }
+.py-3 { padding-top: 24rpx; padding-bottom: 24rpx; }
+
+.m-0 { margin: 0; }
+.mb-1 { margin-bottom: 8rpx; }
+.mb-2 { margin-bottom: 16rpx; }
+.mb-3 { margin-bottom: 24rpx; }
+.mb-4 { margin-bottom: 32rpx; }
+.mb-6 { margin-bottom: 48rpx; }
+.mb-8 { margin-bottom: 64rpx; }
+
+.mt-1 { margin-top: 8rpx; }
+.mt-2 { margin-top: 16rpx; }
+.mt-3 { margin-top: 24rpx; }
+.mt-4 { margin-top: 32rpx; }
+
+.mr-1 { margin-right: 8rpx; }
+.mr-2 { margin-right: 16rpx; }
+.mr-3 { margin-right: 24rpx; }
+
+.ml-1 { margin-left: 8rpx; }
+.ml-2 { margin-left: 16rpx; }
+.ml-4 { margin-left: 32rpx; }
+
+/* ==================== 文字样式 ==================== */
+.text-xs { font-size: 24rpx; }
+.text-sm { font-size: 28rpx; }
+.text-base { font-size: 32rpx; }
+.text-lg { font-size: 36rpx; }
+.text-xl { font-size: 40rpx; }
+.text-2xl { font-size: 48rpx; }
+
+.font-medium { font-weight: 500; }
+.font-bold { font-weight: 700; }
+
+.text-center { text-align: center; }
+.text-left { text-align: left; }
+.text-right { text-align: right; }
+
+.truncate {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.leading-tight { line-height: 1.25; }
+.leading-relaxed { line-height: 1.625; }
+
+/* ==================== 颜色类 ==================== */
+.text-white { color: #ffffff; }
+.text-gray-400 { color: var(--color-gray-400); }
+.text-gray-500 { color: var(--color-gray-500); }
+.text-gray-600 { color: var(--color-gray-600); }
+.text-gray-700 { color: var(--color-gray-700); }
+.text-gray-800 { color: var(--color-gray-800); }
+.text-red-500 { color: var(--color-red-500); }
+.text-red-600 { color: var(--color-red-600); }
+.text-green-500 { color: var(--color-green-500); }
+.text-green-600 { color: var(--color-green-600); }
+.text-blue-600 { color: var(--color-blue-600); }
+.text-blue-800 { color: var(--color-blue-800); }
+.text-yellow-600 { color: var(--color-yellow-600); }
+.text-purple-600 { color: var(--color-purple-600); }
+
+.bg-white { background-color: #ffffff; }
+.bg-gray-50 { background-color: var(--color-gray-50); }
+.bg-gray-100 { background-color: var(--color-gray-100); }
+.bg-gray-200 { background-color: var(--color-gray-200); }
+.bg-red-50 { background-color: #fef2f2; }
+.bg-red-100 { background-color: var(--color-red-100); }
+.bg-red-500 { background-color: var(--color-red-500); }
+.bg-green-50 { background-color: #f0fdf4; }
+.bg-green-100 { background-color: var(--color-green-100); }
+.bg-green-500 { background-color: var(--color-green-500); }
+.bg-blue-50 { background-color: #eff6ff; }
+.bg-blue-100 { background-color: var(--color-blue-100); }
+.bg-blue-500 { background-color: #3b82f6; }
+.bg-yellow-50 { background-color: #fefce8; }
+.bg-yellow-100 { background-color: var(--color-yellow-100); }
+.bg-purple-50 { background-color: #faf5ff; }
+.bg-purple-100 { background-color: var(--color-purple-100); }
+.bg-orange-100 { background-color: var(--color-orange-100); }
+.bg-indigo-100 { background-color: var(--color-indigo-100); }
+
+/* 暗色模式文字 */
+.dark .text-gray-200 { color: var(--color-gray-200); }
+.dark .text-gray-300 { color: var(--color-gray-300); }
+.dark .text-gray-400 { color: var(--color-gray-400); }
+
+/* ==================== 圆角类 ==================== */
+.rounded { border-radius: 8rpx; }
+.rounded-lg { border-radius: 16rpx; }
+.rounded-xl { border-radius: 24rpx; }
+.rounded-2xl { border-radius: 32rpx; }
+.rounded-full { border-radius: 9999rpx; }
+
+/* ==================== 边框类 ==================== */
+.border { border: 2rpx solid var(--color-gray-200); }
+.border-t { border-top: 2rpx solid var(--color-gray-200); }
+.border-b { border-bottom: 2rpx solid var(--color-gray-200); }
+.border-gray-100 { border-color: var(--color-gray-100); }
+.border-gray-200 { border-color: var(--color-gray-200); }
+.border-gray-700 { border-color: var(--color-gray-700); }
+.border-red-500 { border-color: var(--color-red-500); }
+.border-transparent { border-color: transparent; }
+
+/* ==================== 阴影类 ==================== */
+.shadow-sm {
+  box-shadow: 0 2rpx 4rpx rgba(0, 0, 0, 0.05);
+}
+
+.shadow {
+  box-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.1);
+}
+
+.shadow-md {
+  box-shadow: 0 8rpx 16rpx rgba(0, 0, 0, 0.1);
+}
+
+.shadow-lg {
+  box-shadow: 0 20rpx 40rpx rgba(0, 0, 0, 0.15);
+}
+
+.shadow-xl {
+  box-shadow: 0 40rpx 80rpx rgba(0, 0, 0, 0.2);
+}
+
+/* ==================== 宽高类 ==================== */
+.w-full { width: 100%; }
+.h-full { height: 100%; }
+.min-h-screen { min-height: 100vh; }
+
+/* ==================== 定位类 ==================== */
+.relative { position: relative; }
+.absolute { position: absolute; }
+.fixed { position: fixed; }
+.sticky { position: sticky; }
+
+.top-0 { top: 0; }
+.right-0 { right: 0; }
+.bottom-0 { bottom: 0; }
+.left-0 { left: 0; }
+.inset-0 { top: 0; right: 0; bottom: 0; left: 0; }
+
+.z-10 { z-index: 10; }
+.z-20 { z-index: 20; }
+.z-30 { z-index: 30; }
+.z-50 { z-index: 50; }
+
+/* ==================== 溢出处理 ==================== */
+.overflow-hidden { overflow: hidden; }
+.overflow-auto { overflow: auto; }
+.overflow-y-auto { overflow-y: auto; }
+
+/* ==================== 网格系统 ==================== */
+.grid {
+  display: grid;
+}
+
+.grid-cols-2 {
+  grid-template-columns: repeat(2, 1fr);
+}
+
+.grid-cols-3 {
+  grid-template-columns: repeat(3, 1fr);
+}
+
+.grid-cols-4 {
+  grid-template-columns: repeat(4, 1fr);
+}
+
+.grid-cols-5 {
+  grid-template-columns: repeat(5, 1fr);
+}
+
+.gap-2 { gap: 16rpx; }
+.gap-3 { gap: 24rpx; }
+.gap-4 { gap: 32rpx; }
+
+/* ==================== 按钮样式 ==================== */
+.btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24rpx 32rpx;
+  border-radius: 24rpx;
+  font-weight: 500;
+  font-size: 32rpx;
+  border: none;
+  background: none;
+  transition: all 0.2s;
+}
+
+.btn::after {
+  border: none;
+}
+
+.btn-primary {
+  background: linear-gradient(to right, #ef4444, #fb923c);
+  color: #ffffff;
+}
+
+.btn-primary:active {
+  opacity: 0.9;
+  transform: scale(0.98);
+}
+
+.btn-secondary {
+  background-color: var(--color-gray-100);
+  color: var(--color-gray-800);
+}
+
+.btn-secondary:active {
+  background-color: var(--color-gray-200);
+}
+
+.btn-ghost {
+  background-color: transparent;
+  color: var(--color-gray-600);
+}
+
+.btn-ghost:active {
+  background-color: var(--color-gray-100);
+}
+
+.btn-sm {
+  padding: 12rpx 24rpx;
+  font-size: 28rpx;
+  border-radius: 9999rpx;
+}
+
+.btn-disabled {
+  background-color: var(--color-gray-200);
+  color: var(--color-gray-500);
+  cursor: not-allowed;
+}
+
+/* ==================== 输入框样式 ==================== */
+.input {
+  width: 100%;
+  padding: 24rpx 32rpx;
+  border-radius: 24rpx;
+  border: 2rpx solid var(--color-gray-200);
+  background-color: #ffffff;
+  font-size: 32rpx;
+  box-sizing: border-box;
+  transition: all 0.2s;
+}
+
+.input:focus {
+  border-color: var(--color-red-500);
+  box-shadow: 0 0 0 4rpx rgba(239, 68, 68, 0.1);
+}
+
+.input-error {
+  border-color: var(--color-red-500);
+}
+
+/* ==================== 卡片样式 ==================== */
+.card {
+  background-color: #ffffff;
+  border-radius: 24rpx;
+  padding: 40rpx;
+  box-shadow: 0 2rpx 4rpx rgba(0, 0, 0, 0.05);
+  border: 2rpx solid var(--color-gray-100);
+}
+
+.dark .card {
+  background-color: var(--color-gray-800);
+  border-color: var(--color-gray-700);
+}
+
+/* ==================== 状态标签样式 ==================== */
+.status-tag {
+  display: inline-flex;
+  align-items: center;
+  padding: 4rpx 20rpx;
+  border-radius: 9999rpx;
+  font-size: 24rpx;
+  font-weight: 700;
+  opacity: 0.9; /* 90% 不透明度 */
+}
+
+.status-pre-registration {
+  background-color: var(--color-blue-100);
+  color: var(--color-blue-800);
+}
+
+.status-registration {
+  background-color: var(--color-green-100);
+  color: var(--color-green-800);
+}
+
+.status-waiting-list {
+  background-color: var(--color-yellow-100);
+  color: var(--color-yellow-800);
+}
+
+.status-full {
+  background-color: var(--color-gray-100);
+  color: var(--color-gray-800);
+}
+
+.status-finished {
+  background-color: var(--color-purple-100);
+  color: var(--color-purple-800);
+}
+
+.status-finished-pending {
+  background-color: var(--color-orange-100);
+  color: var(--color-orange-800);
+}
+
+.status-finished-completed {
+  background-color: var(--color-indigo-100);
+  color: var(--color-indigo-800);
+}
+
+.status-cancelled {
+  background-color: var(--color-red-100);
+  color: var(--color-red-800);
+}
+
+
+
+/* ==================== 头像样式 ==================== */
+.avatar {
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.avatar-sm {
+  width: 64rpx;
+  height: 64rpx;
+}
+
+.avatar-md {
+  width: 80rpx;
+  height: 80rpx;
+}
+
+.avatar-lg {
+  width: 128rpx;
+  height: 128rpx;
+}
+
+.avatar-ring {
+  border: 4rpx solid #ffffff;
+  box-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.1);
+}
+
+.avatar-ring-red {
+  border: 4rpx solid var(--color-red-500);
+}
+
+/* ==================== 加载动画 ==================== */
+.loading-spinner {
+  width: 48rpx;
+  height: 48rpx;
+  border: 4rpx solid var(--color-gray-200);
+  border-top-color: var(--color-red-500);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* ==================== 动画类 ==================== */
+.transition-all {
+  transition: all 0.2s ease;
+}
+
+.transition-colors {
+  transition: background-color 0.2s, color 0.2s, border-color 0.2s;
+}
+
+.transition-opacity {
+  transition: opacity 0.2s ease;
+}
+
+.transition-transform {
+  transition: transform 0.2s ease;
+}
+
+/* ==================== 遮罩层 ==================== */
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.overlay-bottom {
+  align-items: flex-end;
+  justify-content: center;
+}
+
+/* ==================== 模态框样式 ==================== */
+.modal {
+  background-color: #ffffff;
+  border-radius: 32rpx 32rpx 0 0;
+  width: 100%;
+  max-height: 80vh;
+  overflow: hidden;
+}
+
+.modal-header {
+  padding: 32rpx;
+  border-bottom: 2rpx solid var(--color-gray-100);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.modal-body {
+  padding: 32rpx;
+  overflow-y: auto;
+  max-height: 60vh;
+}
+
+.modal-footer {
+  padding: 32rpx;
+  border-top: 2rpx solid var(--color-gray-100);
+  display: flex;
+  gap: 24rpx;
+}
+
+.dark .modal {
+  background-color: var(--color-gray-800);
+}
+
+.dark .modal-header,
+.dark .modal-footer {
+  border-color: var(--color-gray-700);
+}
+
+/* ==================== 底部安全区域 ==================== */
+.safe-area-bottom {
+  padding-bottom: constant(safe-area-inset-bottom);
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+/* ==================== 隐藏 scrollbar ==================== */
+::-webkit-scrollbar {
+  display: none;
+  width: 0;
+  height: 0;
+  color: transparent;
+}

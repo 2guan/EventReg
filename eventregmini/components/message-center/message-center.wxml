@@ -1,0 +1,68 @@
+<!--
+  消息中心组件
+  与网页版 MessageCenter.tsx 布局完全一致
+-->
+
+<view class="message-center {{theme === 'dark' ? 'dark' : ''}}">
+  <!-- 消息图标按钮 -->
+  <view class="bell-btn" bindtap="toggleOpen">
+    <text class="bell-icon">🔔</text>
+    <!-- 未读数量徽章 -->
+    <view wx:if="{{unreadCount > 0}}" class="badge">
+      {{unreadCount > 9 ? '9+' : unreadCount}}
+    </view>
+  </view>
+  
+  <!-- 消息弹出层 -->
+  <view wx:if="{{isOpen}}" class="message-overlay" bindtap="close">
+    <view class="message-panel" catchtap="stopPropagation">
+      <!-- 头部 -->
+      <view class="panel-header">
+        <text class="panel-title">消息中心</text>
+        <!-- 操作按钮（放在头部） -->
+        <view class="header-actions" wx:if="{{notifications.length > 0}}">
+          <view class="header-action-btn" bindtap="markAllRead">
+            <text>✓ 全部已读</text>
+          </view>
+          <view class="header-action-btn header-action-danger" bindtap="deleteAll">
+            <text>× 清空</text>
+          </view>
+        </view>
+        <view class="close-btn" bindtap="close">
+          <text class="close-icon">×</text>
+        </view>
+      </view>
+      
+      <!-- 消息列表 -->
+      <scroll-view class="message-list" scroll-y>
+        <block wx:if="{{notifications.length > 0}}">
+          <view 
+            wx:for="{{notifications}}" 
+            wx:key="id" 
+            class="message-item {{item.is_read ? 'read' : 'unread'}}"
+            data-id="{{item.id}}"
+            data-is-read="{{item.is_read}}"
+            bindtap="markAsRead"
+          >
+            <view class="message-content">
+              <text class="message-text">{{item.content}}</text>
+              <text class="message-time">{{item.formattedTime}}</text>
+            </view>
+            <view 
+              class="delete-btn" 
+              data-id="{{item.id}}" 
+              catchtap="deleteNotification"
+            >
+              <text class="delete-icon">×</text>
+            </view>
+          </view>
+        </block>
+        
+        <!-- 空状态 -->
+        <view wx:else class="empty-state">
+          <text>暂无新消息</text>
+        </view>
+      </scroll-view>
+    </view>
+  </view>
+</view>

@@ -1,0 +1,16 @@
+.page{min-height:100vh;background:#f9fafb;display:flex;flex-direction:column}.page.dark{background:#111827}
+.header{position:sticky;top:0;z-index:10;background:#fff;padding:24rpx 32rpx;display:flex;align-items:center;justify-content:space-between;box-shadow:0 2rpx 4rpx rgba(0,0,0,.05)}.dark .header{background:#1f2937}
+.back-btn,.theme-btn{width:72rpx;height:72rpx;display:flex;align-items:center;justify-content:center;border-radius:50%;font-size:40rpx;color:#1f2937}.dark .back-btn,.dark .theme-btn{color:#fff}
+.header-title{font-size:36rpx;font-weight:700;color:#1f2937}.dark .header-title{color:#fff}
+.main-content{flex:1;padding:24rpx 32rpx;padding-bottom:160rpx}
+.not-logged-in{flex:1;display:flex;align-items:center;justify-content:center;padding:64rpx;min-height:60vh}
+.login-prompt{display:flex;flex-direction:column;align-items:center;text-align:center}
+.prompt-icon{font-size:128rpx;margin-bottom:32rpx}
+.prompt-title{font-size:40rpx;font-weight:700;color:#1f2937;margin-bottom:16rpx}.dark .prompt-title{color:#fff}
+.prompt-desc{font-size:28rpx;color:#6b7280;margin-bottom:48rpx}.dark .prompt-desc{color:#9ca3af}
+.login-btn{padding:24rpx 64rpx;background:linear-gradient(to right,#ef4444,#fb923c);color:#fff;font-size:32rpx;font-weight:500;border-radius:9999rpx;border:none}.login-btn::after{border:none}
+.loading-container{display:flex;justify-content:center;padding:64rpx}
+.loading-spinner{width:64rpx;height:64rpx;border:4rpx solid #e5e7eb;border-top-color:#ef4444;border-radius:50%;animation:spin 1s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.tournament-list{}
+.bottom-safe-area{height:100rpx;padding-bottom:env(safe-area-inset-bottom)}

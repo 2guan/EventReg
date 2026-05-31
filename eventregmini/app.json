@@ -1,0 +1,52 @@
+{
+    "pages": [
+        "pages/home/home",
+        "pages/tournaments/tournaments",
+        "pages/my-scores/my-scores",
+        "pages/login/login",
+        "pages/register/register",
+        "pages/tournament-detail/tournament-detail",
+        "pages/rankings/rankings",
+        "pages/admin/admin",
+        "pages/admin-users/admin-users",
+        "pages/create-tournament/create-tournament",
+        "pages/edit-tournament/edit-tournament",
+        "pages/my-tournaments/my-tournaments",
+        "pages/activity-log/activity-log",
+        "pages/banner-config/banner-config",
+        "pages/cache-cleanup/cache-cleanup"
+    ],
+    "window": {
+        "backgroundTextStyle": "light",
+        "navigationBarBackgroundColor": "#ffffff",
+        "navigationBarTitleText": "有熊来集",
+        "navigationBarTextStyle": "black"
+    },
+    "tabBar": {
+        "custom": true,
+        "color": "#6b7280",
+        "selectedColor": "#ef4444",
+        "backgroundColor": "#ffffff",
+        "borderStyle": "black",
+        "list": [
+            {
+                "pagePath": "pages/home/home",
+                "text": "首页"
+            },
+            {
+                "pagePath": "pages/tournaments/tournaments",
+                "text": "全部活动"
+            },
+            {
+                "pagePath": "pages/my-scores/my-scores",
+                "text": "我的"
+            }
+        ]
+    },
+    "useExtendedLib": {
+        "weui": true
+    },
+    "style": "v2",
+    "sitemapLocation": "sitemap.json",
+    "lazyCodeLoading": "requiredComponents"
+}

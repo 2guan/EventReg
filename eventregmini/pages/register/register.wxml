@@ -1,0 +1,152 @@
+<!--
+  注册页面
+  与网页版 Register.tsx 布局完全一致
+-->
+
+<view class="page {{theme === 'dark' ? 'dark' : ''}}">
+  <!-- 顶部导航 -->
+  <view class="header">
+    <view class="back-btn" bindtap="goBack">
+      <text class="icon-back">←</text>
+    </view>
+    <text class="header-title">注册</text>
+    <view class="theme-btn" bindtap="toggleTheme">
+      <text class="icon-theme">{{theme === 'light' ? '🌙' : '☀️'}}</text>
+    </view>
+  </view>
+  
+  <!-- 主内容区 -->
+  <scroll-view class="main-content" scroll-y>
+    <!-- 副标题 -->
+    <view class="subtitle-section">
+      <text class="subtitle-text">创建账号，开始你的活动之旅</text>
+    </view>
+    
+    <!-- 头像选择 -->
+    <view class="avatar-section">
+      <view class="avatar-wrapper" bindtap="showAvatarSelector">
+        <image class="avatar-image" src="{{avatar}}" mode="aspectFill" />
+        <view class="avatar-overlay">
+          <text class="overlay-text">更换头像</text>
+        </view>
+      </view>
+      <text class="avatar-hint">点击头像选择</text>
+    </view>
+    
+    <!-- 注册表单 -->
+    <view class="form-section">
+      <!-- 用户名 -->
+      <view class="form-item">
+        <text class="form-label">用户名</text>
+        <view class="input-wrapper {{errors.username ? 'input-error' : ''}}">
+          <input 
+            class="form-input"
+            type="text"
+            placeholder="请设置用户名（3-20个字符）"
+            value="{{username}}"
+            bindinput="onUsernameInput"
+          />
+        </view>
+        <text wx:if="{{errors.username}}" class="error-text">{{errors.username}}</text>
+      </view>
+      
+      <!-- 昵称 -->
+      <view class="form-item">
+        <text class="form-label">昵称</text>
+        <view class="input-wrapper {{errors.nickname ? 'input-error' : ''}}">
+          <input 
+            class="form-input"
+            type="nickname"
+            placeholder="请设置昵称（2-20个字符）"
+            value="{{nickname}}"
+            bindinput="onNicknameInput"
+            bindblur="onNicknameBlur"
+          />
+        </view>
+        <text wx:if="{{errors.nickname}}" class="error-text">{{errors.nickname}}</text>
+      </view>
+      
+      <!-- 密码 -->
+      <view class="form-item">
+        <text class="form-label">密码</text>
+        <view class="input-wrapper {{errors.password ? 'input-error' : ''}}">
+          <input 
+            class="form-input"
+            type="password"
+            placeholder="请设置密码（6-20个字符）"
+            value="{{password}}"
+            bindinput="onPasswordInput"
+          />
+        </view>
+        <text wx:if="{{errors.password}}" class="error-text">{{errors.password}}</text>
+      </view>
+      
+      <!-- 确认密码 -->
+      <view class="form-item">
+        <text class="form-label">确认密码</text>
+        <view class="input-wrapper {{errors.confirmPassword ? 'input-error' : ''}}">
+          <input 
+            class="form-input"
+            type="password"
+            placeholder="请再次输入密码"
+            value="{{confirmPassword}}"
+            bindinput="onConfirmPasswordInput"
+          />
+        </view>
+        <text wx:if="{{errors.confirmPassword}}" class="error-text">{{errors.confirmPassword}}</text>
+      </view>
+      
+      <!-- 注册按钮 -->
+      <button 
+        class="submit-btn" 
+        bindtap="handleSubmit"
+        disabled="{{isSubmitting}}"
+      >
+        <text wx:if="{{isSubmitting}}">注册中...</text>
+        <text wx:else>注册</text>
+      </button>
+      
+      <!-- 登录链接 -->
+      <view class="login-link">
+        <text class="login-text">已有账号？</text>
+        <text class="login-action" bindtap="goToLogin">立即登录</text>
+      </view>
+      
+
+    </view>
+  </scroll-view>
+  
+  <!-- 头像选择模态框 -->
+  <view wx:if="{{showAvatarModal}}" class="avatar-modal-overlay" bindtap="closeAvatarModal">
+    <view class="avatar-modal" catchtap="stopPropagation">
+      <view class="modal-header">
+        <text class="modal-title">选择头像</text>
+        <view class="modal-close" bindtap="closeAvatarModal">
+          <text>×</text>
+        </view>
+      </view>
+      
+      <!-- 微信头像选择 -->
+      <view class="wx-avatar-section">
+        <button class="wx-avatar-btn" open-type="chooseAvatar" bindchooseavatar="chooseWxAvatar">
+          使用微信头像
+        </button>
+      </view>
+      
+      <scroll-view class="avatar-grid-wrapper" scroll-y>
+        <view class="avatar-grid">
+          <view 
+            wx:for="{{avatars}}" 
+            wx:key="*this" 
+            class="avatar-item {{avatar === item ? 'selected' : ''}}"
+            data-avatar="{{item}}"
+            bindtap="selectAvatar"
+          >
+            <image class="avatar-option" src="{{item}}" mode="aspectFill" />
+            <view wx:if="{{avatar === item}}" class="avatar-check">✓</view>
+          </view>
+        </view>
+      </scroll-view>
+    </view>
+  </view>
+</view>

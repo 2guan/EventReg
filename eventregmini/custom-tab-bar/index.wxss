@@ -1,0 +1,84 @@
+/* 自定义TabBar样式 */
+.tab-bar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  background-color: #1f2937;
+  border-top: 2rpx solid #374151;
+  padding-top: 16rpx;
+  padding-bottom: calc(16rpx + constant(safe-area-inset-bottom));
+  padding-bottom: calc(16rpx + env(safe-area-inset-bottom));
+  z-index: 999;
+  box-sizing: border-box;
+}
+
+/* 浅色模式 */
+.tab-bar:not(.dark) {
+  background-color: #ffffff;
+  border-top-color: #e5e7eb;
+}
+
+/* 暗色模式 */
+.tab-bar.dark {
+  background-color: #1f2937;
+  border-top-color: #374151;
+}
+
+.tab-bar-item {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 8rpx 0;
+}
+
+.tab-icon {
+  font-size: 44rpx;
+  color: #6b7280;
+  margin-bottom: 4rpx;
+}
+
+.dark .tab-icon {
+  color: #9ca3af;
+}
+
+.tab-bar-item.active .tab-icon {
+  color: #ef4444;
+}
+
+.tab-text {
+  font-size: 22rpx;
+  color: #6b7280;
+}
+
+.dark .tab-text {
+  color: #9ca3af;
+}
+
+.tab-bar-item.active .tab-text {
+  color: #ef4444;
+}
+
+/* weui图标样式 */
+.weui-icon {
+  font-family: 'weui';
+}
+
+.weui-icon-home {
+  content: '\e605';
+}
+
+.weui-icon-home::before {
+  content: '🏠';
+}
+
+.weui-icon-calendar::before {
+  content: '🏸';
+}
+
+.weui-icon-user::before {
+  content: '👤';
+}

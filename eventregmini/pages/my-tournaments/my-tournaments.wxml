@@ -1,0 +1,38 @@
+<view class="page {{theme === 'dark' ? 'dark' : ''}}">
+  <view class="header">
+    <view class="back-btn" bindtap="goBack"><text>←</text></view>
+    <text class="header-title">我的报名</text>
+    <view class="theme-btn" bindtap="toggleTheme"><text>{{theme === 'light' ? '🌙' : '☀️'}}</text></view>
+  </view>
+  
+  <view wx:if="{{!isAuthenticated}}" class="not-logged-in">
+    <view class="login-prompt">
+      <text class="prompt-icon">📋</text>
+      <text class="prompt-title">登录后查看报名</text>
+      <text class="prompt-desc">登录后可查看您报名的所有活动</text>
+      <button class="login-btn" bindtap="goToLogin">立即登录</button>
+    </view>
+  </view>
+  
+  <scroll-view wx:else class="main-content" scroll-y>
+    <view wx:if="{{loading}}" class="loading-container"><view class="loading-spinner"></view></view>
+    
+    <view wx:elif="{{tournaments.length > 0}}" class="tournament-list">
+      <tournament-card 
+        wx:for="{{tournaments}}" 
+        wx:key="id"
+        tournament="{{item}}"
+        index="{{index}}"
+        isEnrolled="{{true}}"
+        isSelfEnrolled="{{item.isSelfEnrolled}}"
+        proxyCount="{{item.proxyCount}}"
+        customStatusLabel="{{item.customStatusLabel}}"
+        theme="{{theme}}"
+      />
+    </view>
+    
+    <empty wx:else message="暂无报名记录" />
+    
+    <view class="bottom-safe-area"></view>
+  </scroll-view>
+</view>

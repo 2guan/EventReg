@@ -1,0 +1,283 @@
+/**
+ * 消息中心组件样式
+ * 与网页版 MessageCenter.tsx 样式完全一致
+ */
+
+.message-center {
+  position: relative;
+}
+
+/* 铃铛按钮 */
+.bell-btn {
+  position: relative;
+  width: 80rpx;
+  height: 80rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  transition: background-color 0.2s;
+}
+
+.bell-btn:active {
+  background-color: #f3f4f6;
+}
+
+.dark .bell-btn:active {
+  background-color: #374151;
+}
+
+.bell-icon {
+  font-size: 40rpx;
+}
+
+/* 未读徽章 */
+.badge {
+  position: absolute;
+  top: 0;
+  right: 0;
+  min-width: 32rpx;
+  height: 32rpx;
+  padding: 0 8rpx;
+  background-color: #ef4444;
+  border-radius: 16rpx;
+  font-size: 20rpx;
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 4rpx solid #ffffff;
+}
+
+.dark .badge {
+  border-color: #1f2937;
+}
+
+/* 遮罩层 */
+.message-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 100;
+}
+
+/* 消息面板 */
+.message-panel {
+  position: absolute;
+  top: 120rpx;
+  right: 32rpx;
+  width: 640rpx;
+  max-width: calc(100vw - 64rpx);
+  background-color: #ffffff;
+  border-radius: 24rpx;
+  box-shadow: 0 20rpx 40rpx rgba(0, 0, 0, 0.15);
+  border: 2rpx solid #f3f4f6;
+  overflow: hidden;
+  animation: slideIn 0.2s ease;
+}
+
+.dark .message-panel {
+  background-color: #1f2937;
+  border-color: #374151;
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-20rpx) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* 面板头部 */
+.panel-header {
+  padding: 24rpx 32rpx;
+  border-bottom: 2rpx solid #f3f4f6;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: #f9fafb;
+}
+
+.dark .panel-header {
+  background-color: rgba(31, 41, 55, 0.5);
+  border-bottom-color: #374151;
+}
+
+.panel-title {
+  font-weight: 700;
+  font-size: 32rpx;
+  color: #1f2937;
+}
+
+.dark .panel-title {
+  color: #e5e7eb;
+}
+
+.close-btn {
+  width: 56rpx;
+  height: 56rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 12rpx;
+}
+
+.close-btn:active {
+  background-color: #e5e7eb;
+}
+
+.dark .close-btn:active {
+  background-color: #374151;
+}
+
+.close-icon {
+  font-size: 48rpx;
+  color: #6b7280;
+  line-height: 1;
+}
+
+/* 头部操作按钮 */
+.header-actions {
+  display: flex;
+  gap: 12rpx;
+  margin-left: auto;
+  margin-right: 16rpx;
+}
+
+.header-action-btn {
+  padding: 8rpx 16rpx;
+  border-radius: 8rpx;
+  font-size: 22rpx;
+  background-color: #f3f4f6;
+  color: #6b7280;
+}
+
+.dark .header-action-btn {
+  background-color: #374151;
+  color: #9ca3af;
+}
+
+.header-action-btn:active {
+  opacity: 0.7;
+}
+
+.header-action-danger {
+  background-color: #fef2f2;
+  color: #ef4444;
+}
+
+.dark .header-action-danger {
+  background-color: rgba(127, 29, 29, 0.3);
+  color: #fca5a5;
+}
+
+/* 消息列表 */
+.message-list {
+  max-height: 60vh;
+  padding: 16rpx;
+}
+
+/* 消息项 */
+.message-item {
+  padding: 24rpx;
+  background-color: #ffffff;
+  border-radius: 16rpx;
+  border: 2rpx solid #f3f4f6;
+  margin-bottom: 16rpx;
+  position: relative;
+  display: flex;
+  align-items: flex-start;
+  transition: opacity 0.2s;
+}
+
+.dark .message-item {
+  background-color: rgba(55, 65, 81, 0.5);
+  border-color: #374151;
+}
+
+/* 未读消息 - 左侧蓝色指示条 */
+.message-item.unread {
+  border-left: 6rpx solid #3b82f6;
+}
+
+.dark .message-item.unread {
+  border-left-color: #60a5fa;
+}
+
+/* 已读消息 - 透明度降低 */
+.message-item.read {
+  opacity: 0.6;
+}
+
+.message-item:last-child {
+  margin-bottom: 0;
+}
+
+.message-content {
+  flex: 1;
+  padding-right: 60rpx;
+}
+
+.message-text {
+  font-size: 28rpx;
+  color: #374151;
+  line-height: 1.6;
+  display: block;
+}
+
+.dark .message-text {
+  color: #e5e7eb;
+}
+
+.message-time {
+  font-size: 24rpx;
+  color: #9ca3af;
+  margin-top: 16rpx;
+  display: block;
+}
+
+/* 删除按钮 */
+.delete-btn {
+  position: absolute;
+  top: 16rpx;
+  right: 16rpx;
+  width: 56rpx;
+  height: 56rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  opacity: 0.6;
+}
+
+.delete-btn:active {
+  background-color: #fef2f2;
+  opacity: 1;
+}
+
+.dark .delete-btn:active {
+  background-color: rgba(127, 29, 29, 0.2);
+}
+
+.delete-icon {
+  font-size: 28rpx;
+  color: #6b7280;
+}
+
+/* 空状态 */
+.empty-state {
+  padding: 64rpx 32rpx;
+  text-align: center;
+  color: #6b7280;
+  font-size: 28rpx;
+}
+
+.dark .empty-state {
+  color: #9ca3af;
+}

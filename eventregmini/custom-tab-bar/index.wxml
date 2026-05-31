@@ -1,0 +1,16 @@
+<!--自定义TabBar组件-->
+<view class="tab-bar {{theme === 'dark' ? 'dark' : ''}}">
+  <view 
+    wx:for="{{list}}" 
+    wx:key="index" 
+    class="tab-bar-item {{selected === index ? 'active' : ''}}" 
+    data-path="{{item.pagePath}}" 
+    data-index="{{index}}" 
+    bindtap="switchTab"
+  >
+    <view class="tab-icon">
+      <text class="weui-icon {{item.icon}}"></text>
+    </view>
+    <view class="tab-text">{{item.text}}</view>
+  </view>
+</view>

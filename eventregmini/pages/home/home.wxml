@@ -1,0 +1,120 @@
+<!--
+  首页
+  与网页版 Home.tsx 布局完全一致
+-->
+
+<view class="page {{theme === 'dark' ? 'dark' : ''}}">
+  <!-- 顶部导航栏 -->
+  <view class="header">
+    <view class="header-left">
+      <text class="app-logo">🏆</text>
+      <text class="app-name">有熊来集</text>
+    </view>
+    
+    <view class="header-right">
+      <!-- 已登录状态 -->
+      <block wx:if="{{isAuthenticated}}">
+        <!-- 管理中心按钮（仅管理员） -->
+        <view wx:if="{{userInfo.role === 'admin'}}" class="admin-btn" bindtap="goToAdmin">
+          <text>管理中心</text>
+        </view>
+        
+        <!-- 主题切换 -->
+        <view class="theme-btn" bindtap="toggleTheme">
+          <text>{{theme === 'light' ? '🌙' : '☀️'}}</text>
+        </view>
+        
+        <!-- 消息中心 -->
+        <message-center theme="{{theme}}" />
+      </block>
+      
+      <!-- 未登录状态 -->
+      <block wx:else>
+        <!-- 主题切换 -->
+        <view class="theme-btn" bindtap="toggleTheme">
+          <text>{{theme === 'light' ? '🌙' : '☀️'}}</text>
+        </view>
+        <view class="login-btn" bindtap="goToLogin">
+          <text>登录/注册</text>
+        </view>
+      </block>
+    </view>
+  </view>
+  
+  <!-- 主内容区 -->
+  <scroll-view class="main-content" scroll-y enhanced show-scrollbar="{{false}}">
+    <!-- 欢迎横幅 -->
+    <view class="welcome-banner">
+      <view class="banner-bg">
+        <view class="banner-circle-1"></view>
+        <view class="banner-circle-2"></view>
+      </view>
+      
+      <view class="banner-content">
+        <!-- 已登录 -->
+        <block wx:if="{{isAuthenticated}}">
+          <view class="user-avatar">
+            <image src="{{userInfo.avatar || 'https://sportsreg.shenhaimujing.com/sportsreg/face/defaultface-user%20(1).jpg'}}" mode="aspectFill" />
+          </view>
+          <view class="user-info">
+            <text class="welcome-text">欢迎回来，{{userInfo.nickname || '用户'}}</text>
+            <view class="points-badge">
+              <text>积分: {{userInfo.points || 0}}</text>
+            </view>
+          </view>
+        </block>
+        
+        <!-- 未登录 -->
+        <block wx:else>
+          <text class="welcome-title">欢迎来到有熊来集</text>
+        </block>
+      </view>
+    </view>
+    
+    <!-- 我报名的活动 -->
+    <view wx:if="{{isAuthenticated && hasUpcomingRegisteredTournaments}}" class="section">
+      <view class="section-header">
+        <text class="section-icon">✅</text>
+        <text class="section-title">我报名的活动</text>
+      </view>
+      
+      <view class="tournament-list">
+        <tournament-card 
+          wx:for="{{myRegisteredTournaments}}" 
+          wx:key="id"
+          tournament="{{item}}"
+          index="{{index}}"
+          isEnrolled="{{true}}"
+          isSelfEnrolled="{{item.isSelfEnrolled}}"
+          proxyCount="{{item.proxyCount}}"
+          customStatusLabel="{{item.customStatusLabel}}"
+          theme="{{theme}}"
+        />
+      </view>
+    </view>
+    
+    <!-- 即将开始的活动 -->
+    <view class="section">
+      <view class="section-header">
+        <text class="section-icon">📅</text>
+        <text class="section-title">即将开始的活动</text>
+      </view>
+      
+      <view class="tournament-list">
+        <block wx:if="{{upcomingTournaments.length > 0}}">
+          <tournament-card 
+            wx:for="{{upcomingTournaments}}" 
+            wx:key="id"
+            tournament="{{item}}"
+            index="{{index}}"
+            theme="{{theme}}"
+          />
+        </block>
+        <empty wx:else message="暂无更多即将开始的活动" />
+      </view>
+    </view>
+    
+    <!-- 底部安全区域 -->
+    <view class="bottom-safe-area"></view>
+  </scroll-view>
+</view>

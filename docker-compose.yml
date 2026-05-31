@@ -1,0 +1,18 @@
+services:
+  app:
+    container_name: eventreg-app
+    build: .
+    ports:
+      - "3300:3000"
+    volumes:
+      - ./EventRegdata/data:/app/data
+      - ./EventRegdata/uploads:/app/dist/static/face/uploads
+      - ./EventRegdata/banners:/app/dist/static/banner
+      - ./EventRegdata/images:/app/dist/static/images
+      - ./EventRegdata/logs:/app/logs
+    environment:
+      - JWT_SECRET=your_secure_jwt_secret_here
+      - WX_APPID=wx1e2e84238449c35b
+      - WX_SECRET=d86f02a9fcfd1f24464484a28944073d
+      - LOG_PATH=/app/logs/server.log
+    restart: unless-stopped

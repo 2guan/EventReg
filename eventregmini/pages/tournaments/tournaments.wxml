@@ -1,0 +1,78 @@
+<!--
+  全部活动页面
+  与网页版 Tournaments.tsx 布局完全一致
+-->
+
+<view class="page {{theme === 'dark' ? 'dark' : ''}}">
+  <!-- 顶部导航 -->
+  <view class="header">
+    <view class="header-left">
+      <!-- 范围筛选按钮放在标题位置 -->
+      <view 
+        class="header-tab {{scopeFilter === 'all' ? 'active' : ''}}"
+        data-scope="all"
+        bindtap="onScopeChange"
+      >
+        <text>全部活动</text>
+      </view>
+      <view 
+        wx:if="{{isAuthenticated}}"
+        class="header-tab {{scopeFilter === 'mine' ? 'active' : ''}}"
+        data-scope="mine"
+        bindtap="onScopeChange"
+      >
+        <text>我的活动</text>
+      </view>
+    </view>
+    
+    <view class="header-right">
+      <view class="theme-btn" bindtap="toggleTheme">
+        <text>{{theme === 'light' ? '🌙' : '☀️'}}</text>
+      </view>
+      <message-center wx:if="{{isAuthenticated}}" theme="{{theme}}" />
+    </view>
+  </view>
+  
+  <!-- 状态筛选区域（可折叠） -->
+  <view wx:if="{{showStatusFilter}}" class="filter-container">
+    <view class="filter-row status-filter">
+      <view 
+        wx:for="{{statusTabs}}" 
+        wx:key="key"
+        class="filter-chip small {{statusFilter === item.key ? 'active' : ''}}"
+        data-status="{{item.key}}"
+        bindtap="onStatusChange"
+      >
+        <text>{{item.label}}</text>
+      </view>
+    </view>
+  </view>
+  
+  <!-- 主内容区 -->
+  <scroll-view class="main-content" scroll-y enhanced show-scrollbar="{{false}}">
+    <!-- 加载状态 -->
+    <view wx:if="{{loading}}" class="loading-container">
+      <view class="loading-spinner"></view>
+    </view>
+    
+    <!-- 活动列表 -->
+    <view wx:else class="tournament-list">
+      <block wx:if="{{filteredTournaments.length > 0}}">
+        <tournament-card 
+          wx:for="{{filteredTournaments}}" 
+          wx:key="id"
+          tournament="{{item}}"
+          index="{{index}}"
+          isEnrolled="{{item.isSelfEnrolled || item.proxyCount > 0}}"
+          isSelfEnrolled="{{item.isSelfEnrolled}}"
+          proxyCount="{{item.proxyCount}}"
+          theme="{{theme}}"
+        />
+      </block>
+      <empty wx:else message="{{emptyMessage}}" />
+    </view>
+    
+    <!-- 底部安全区域 -->
+    <view class="bottom-safe-area"></view>
+  </scroll-view>
+</view>

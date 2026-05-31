@@ -1,0 +1,8 @@
+{
+    "usingComponents": {
+        "tournament-card": "/components/tournament-card/tournament-card",
+        "empty": "/components/empty/empty"
+    },
+    "navigationBarTitleText": "有熊来集",
+    "enablePullDownRefresh": true
+}

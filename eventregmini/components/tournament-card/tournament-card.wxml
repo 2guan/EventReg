@@ -1,0 +1,134 @@
+<!--
+  活动卡片组件
+  与网页版 TournamentCard.tsx 布局完全一致
+-->
+
+<view class="tournament-card {{theme === 'dark' ? 'dark' : ''}}" bindtap="onTapCard">
+  <!-- 活动封面图片 -->
+  <view class="card-image-container">
+    <image 
+      class="card-image" 
+      src="{{tournament.image}}" 
+      mode="aspectFill"
+      lazy-load
+    />
+    
+    <!-- 状态标签 -->
+    <view class="status-tag {{statusClass}}">
+      {{statusText}}
+    </view>
+    
+    <!-- 报名状态标签容器 (两行圆角矩形) -->
+    <view wx:if="{{isEnrolled}}" class="enrolled-tags-container">
+      <!-- 自己报名标签 -->
+      <view wx:if="{{isSelfEnrolled}}" class="enrolled-tag mini">
+        <text class="icon-check">✓</text>
+        <text>已报名</text>
+      </view>
+      <!-- 代报名标签 -->
+      <view wx:if="{{proxyCount > 0}}" class="enrolled-tag mini proxy">
+        <text class="icon-check">✓</text>
+        <text>代报名{{proxyCount}}人</text>
+      </view>
+      <!-- 降级逻辑: 如果没有新的字段但有旧的字符串 label -->
+      <view wx:if="{{!isSelfEnrolled && proxyCount <= 0 && customStatusLabel}}" class="enrolled-tag mini">
+        <text class="icon-check">✓</text>
+        <text>{{customStatusLabel}}</text>
+      </view>
+    </view>
+    
+    <!-- 热门标签 -->
+    <view wx:if="{{!isEnrolled && tournament.isPopular}}" class="popular-tag">
+      热门
+    </view>
+  </view>
+  
+  <!-- 卡片内容 -->
+  <view class="card-content">
+    <view class="card-info">
+      <!-- 标题 -->
+      <view class="card-title">{{tournament.name}}</view>
+      
+      <!-- 日期时间 -->
+      <view class="card-meta">
+        <text class="icon-calendar">📅</text>
+        <text>{{formattedDateTime}}</text>
+      </view>
+      
+      <!-- 地点 -->
+      <view class="card-meta">
+        <text class="icon-location">📍</text>
+        <text>{{tournament.location}}</text>
+      </view>
+      
+      <!-- 分享按钮 (使用button open-type直接分享) -->
+      <button 
+        class="share-btn-native" 
+        open-type="share"
+        data-tournament="{{tournament}}"
+        data-share-image="{{shareImagePath}}"
+        catchtap="onPrepareShare"
+      >
+        <text class="icon-share">⚡</text>
+        <text>分享</text>
+      </button>
+    </view>
+    
+    <!-- 报名人数显示 -->
+    <view class="card-stats">
+      <!-- 预报名状态 -->
+      <block wx:if="{{tournament.status === 'pre-registration'}}">
+        <view class="stat-box stat-blue">
+          <text class="stat-label">预报名</text>
+          <text class="stat-value">{{tournament.registeredCount + (tournament.waitlistCount || 0)}}</text>
+        </view>
+      </block>
+      
+      <!-- 待结算状态 -->
+      <block wx:elif="{{tournament.status === 'finished-pending'}}">
+        <!-- 已参与者显示本次花费 -->
+        <block wx:if="{{isEnrolled || tournament.myRegistrationCount > 0}}">
+          <view class="stat-box stat-purple">
+            <text class="stat-label">本次花费</text>
+            <text class="stat-value">￥{{consumptionValue}}</text>
+          </view>
+        </block>
+        <!-- 未参与者显示报名人数 -->
+        <block wx:else>
+          <view class="stat-box stat-green">
+            <text class="stat-label">上场人数</text>
+            <text class="stat-value">{{tournament.registeredCount}}/{{tournament.maxFieldPlayers || tournament.maxPlayers}}</text>
+          </view>
+        </block>
+      </block>
+      
+      <!-- 已结束状态 -->
+      <block wx:elif="{{tournament.status === 'finished-completed'}}">
+        <view class="stat-box stat-green">
+          <text class="stat-label">报名人数</text>
+          <text class="stat-value">{{tournament.registeredCount}}/{{tournament.maxFieldPlayers || tournament.maxPlayers}}</text>
+        </view>
+      </block>
+      
+      <!-- 其他状态 (registration, waiting-list, full, cancelled) -->
+      <block wx:else>
+        <view class="stat-box stat-green">
+          <text class="stat-label">上场人数</text>
+          <text class="stat-value">{{tournament.registeredCount}}/{{tournament.maxFieldPlayers || tournament.maxPlayers}}</text>
+        </view>
+        <view class="stat-box stat-yellow">
+          <text class="stat-label">候补人数</text>
+          <text class="stat-value">{{tournament.waitlistCount || 0}}/{{tournament.maxWaitlist || 5}}</text>
+        </view>
+      </block>
+    </view>
+  </view>
+</view>
+
+<!-- 用于生成分享图片的canvas (隐藏) -->
+<canvas 
+  type="2d" 
+  id="shareCanvas" 
+  class="share-canvas"
+  style="position:fixed; left:-9999px; top:-9999px; width:375px; height:300px;"
+></canvas>

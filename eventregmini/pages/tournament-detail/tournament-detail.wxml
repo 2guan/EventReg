@@ -1,0 +1,485 @@
+<!--
+  活动详情页
+  与网页版 TournamentDetail.tsx 布局完全一致
+  包含全部14个子模块
+-->
+
+<view class="page {{theme === 'dark' ? 'dark' : ''}}">
+  <!-- 顶部导航 -->
+  <view class="header">
+    <text class="header-title">活动详情</text>
+    <view class="header-right">
+      <view class="theme-btn" bindtap="toggleTheme">
+        <text>{{theme === 'light' ? '🌙' : '☀️'}}</text>
+      </view>
+      <message-center id="messageCenter" wx:if="{{isAuthenticated}}" theme="{{theme}}" />
+    </view>
+  </view>
+  
+  <!-- 加载状态 -->
+  <view wx:if="{{loading}}" class="loading-container">
+    <view class="loading-spinner"></view>
+  </view>
+  
+  <!-- 主内容 -->
+  <scroll-view wx:else class="main-content" scroll-y enhanced show-scrollbar="{{false}}">
+    <!-- 1. 活动图片和基本信息 -->
+    <view class="banner-section">
+      <image class="banner-image" src="{{tournament.image}}" mode="aspectFill" />
+      <view class="status-badge {{statusClass}}">{{statusText}}</view>
+    </view>
+    
+    <!-- 2. 活动标题和操作按钮 - 白色卡片包裹 -->
+    <view class="title-section card">
+      <view class="title-row">
+        <text class="tournament-title">{{tournament.name}}</text>
+        <view class="title-actions">
+          <button class="share-btn-direct" open-type="share">
+            <text>⚡ 分享</text>
+          </button>
+          <button class="subscribe-btn" wx:if="{{myEnrollments.length > 0}}" bindtap="handleSubscribe">
+            <text>🔔 订阅</text>
+          </button>
+          <button class="download-btn" wx:if="{{isAdmin}}" bindtap="handleCopyDownloadLink">
+            <text>📥 下载</text>
+          </button>
+        </view>
+      </view>
+      
+      <view class="meta-info">
+        <view class="meta-item">
+          <view class="meta-icon-box">📅</view>
+          <text>{{formattedDateTime}}</text>
+        </view>
+        <view class="meta-item">
+          <view class="meta-icon-box">📍</view>
+          <text>{{tournament.location}}</text>
+        </view>
+      </view>
+    </view>
+    
+    <!-- 提示信息（标题下方） -->
+    <view wx:if="{{tipType}}" class="tip-card {{tipType}}">
+      <text class="tip-icon">{{tipIcon}}</text>
+      <view class="tip-content">
+        <text class="tip-title">{{tipTitle}}</text>
+        <text class="tip-desc">{{tipDesc}}</text>
+      </view>
+    </view>
+    
+    <!-- 3. 费用结算 (待结算/已结束状态) - 仅上场人员(非候补)或管理员可见 -->
+    <view wx:if="{{(tournament.status === 'finished-pending' || tournament.status === 'finished-completed') && (myEnrollmentsInPlayers.length > 0 || isAdmin)}}" class="cost-section card">
+      <view class="section-title">
+        <text class="title-icon">💰</text>
+        <text>费用结算</text>
+      </view>
+      
+      <!-- 费用汇总 -->
+      <view class="cost-summary-box">
+        <view class="cost-summary-row">
+          <text class="cost-summary-label">总费用</text>
+          <text class="cost-summary-value">¥{{tournament.totalCost || 0}}</text>
+        </view>
+        <view class="cost-summary-row">
+          <text class="cost-summary-label">上场人数</text>
+          <text class="cost-summary-value-normal">{{players.length}} 人</text>
+        </view>
+        <view class="cost-summary-divider"></view>
+        <view class="cost-summary-row">
+          <text class="cost-summary-label-bold">人均费用</text>
+          <text class="cost-summary-value-red">¥{{perPersonCost}}</text>
+        </view>
+      </view>
+      
+      <!-- 费用说明 -->
+      <view wx:if="{{tournament.costNote}}" class="cost-note-box">
+        <view class="cost-note-title">
+          <text class="cost-note-icon">📝</text>
+          <text>费用说明</text>
+        </view>
+        <text class="cost-note-content">{{tournament.costNote}}</text>
+      </view>
+      
+      <!-- 付款人列表 -->
+      <view class="payers-list">
+        <view wx:for="{{payers}}" wx:key="userId" class="payer-item">
+          <view class="payer-info">
+            <image class="payer-avatar" src="{{item.avatar}}" mode="aspectFill" />
+            <view class="payer-detail">
+              <view class="payer-name">
+                <text>{{item.name}}</text>
+                <text wx:if="{{item.isMe}}" class="me-tag">我</text>
+              </view>
+              <text class="payer-count">负责 {{item.count}} 人{{item.count > 1 ? ' (含代报)' : ''}}</text>
+            </view>
+          </view>
+          <text class="payer-cost {{item.isMe ? 'is-me' : ''}}">¥{{item.totalCost}}</text>
+        </view>
+      </view>
+
+    </view>
+    
+    <!-- 4. 报名人员列表 - 与网页版一致 -->
+    <view class="participants-section card">
+      <!-- 管理员操作按钮行 (在标题上方) -->
+      <view wx:if="{{userInfo.role === 'admin'}}" class="admin-actions-row">
+        <!-- 管理员添加按钮 -->
+        <view class="admin-add-btn" bindtap="showAdminAddModal">
+          <text class="admin-add-icon">+</text>
+          <text>管理员加人</text>
+        </view>
+        <!-- 开始提醒按钮 (仅正式报名状态) -->
+        <view 
+          wx:if="{{tournament.status === 'registration'}}" 
+          class="start-reminder-btn"
+          bindtap="sendStartReminder"
+        >
+          <text class="reminder-icon">📢</text>
+          <text>开始提醒</text>
+        </view>
+        <!-- 锁定开关 (仅正式报名状态) - 三种状态 -->
+        <view 
+          wx:if="{{tournament.status === 'registration'}}" 
+          class="lock-btn {{lockState === 1 ? 'basic-locked' : lockState === 2 ? 'fully-locked' : ''}}"
+          bindtap="cycleLockState"
+        >
+          <text class="lock-icon">{{lockState === 0 ? '🔓' : lockState === 1 ? '🔒' : '🔐'}}</text>
+          <text>{{lockState === 0 ? '未锁定' : lockState === 1 ? '基本锁定' : '完全锁定'}}</text>
+        </view>
+      </view>
+      
+      <!-- 主标题行: 报名人员 (总数) -->
+      <view class="section-header-main">
+        <text class="section-title-text">报名人员 ({{players.length + waitingList.length}})</text>
+      </view>
+      
+      <!-- 上场人员副标题 (预报名和已取消状态不显示) -->
+      <view wx:if="{{tournament.status !== 'pre-registration' && tournament.status !== 'cancelled'}}" class="subsection-title">
+        <text>上场人员 ({{players.length}}/{{tournament.maxFieldPlayers || tournament.maxPlayers}})</text>
+      </view>
+      
+      <!-- 人员网格 - 一行两个 -->
+      <view class="participants-grid">
+        <block wx:if="{{players.length > 0}}">
+          <view 
+            wx:for="{{players}}" 
+            wx:key="id" 
+            class="participant-card {{item.isMe ? 'is-me' : ''}}"
+          >
+            <!-- 左侧：头像区域 -->
+            <view class="card-left">
+              <!-- 代报标签 -->
+              <view wx:if="{{item.proxyName}}" class="proxy-tag {{item.isOwner ? 'is-owner' : ''}}">
+                <text>{{item.proxyName}}代报</text>
+              </view>
+              
+              <view class="card-avatar">
+                <image src="{{item.avatar}}" mode="aspectFill" />
+                <view wx:if="{{item.isMe}}" class="me-badge">我</view>
+              </view>
+            </view>
+            
+            <!-- 右侧：信息区域 -->
+            <view class="card-right">
+              <text class="card-name {{item.isMe ? 'is-me' : ''}}">{{item.name}}</text>
+              <text class="card-time">{{item.formattedJoinedAt}}</text>
+            </view>
+            
+            <!-- "..." 操作按钮 (使用预计算的 canShowCancelButton) -->
+            <view 
+              wx:if="{{item.canShowCancelButton && tournament.status !== 'finished-pending' && tournament.status !== 'finished-completed' && tournament.status !== 'cancelled'}}" 
+              class="more-btn"
+              data-participant="{{item}}"
+              catchtap="onTapParticipant"
+            >
+              <text>···</text>
+            </view>
+          </view>
+        </block>
+        <view wx:else class="empty-participants">
+          <text>暂无报名人员</text>
+        </view>
+      </view>
+    </view>
+    
+    <!-- 独立的积分录入卡片 (管理员 + 待结算/已结束) -->
+    <view wx:if="{{userInfo.role === 'admin' && (tournament.status === 'finished-pending' || tournament.status === 'finished-completed')}}" class="score-section card">
+      <view class="score-section-header">
+        <text class="score-section-title">📊 积分录入</text>
+        <view wx:if="{{!isEditingScores}}" class="score-edit-btn" bindtap="toggleEditScores">
+          <text>编辑</text>
+        </view>
+      </view>
+      
+      <!-- 积分列表 -->
+      <view class="score-list">
+        <view wx:for="{{players}}" wx:key="id" class="score-item">
+          <view class="score-item-left">
+            <image class="score-avatar" src="{{item.avatar}}" mode="aspectFill" />
+            <text class="score-name">{{item.name}}</text>
+          </view>
+          <view class="score-item-right">
+            <input 
+              wx:if="{{isEditingScores}}" 
+              class="score-input-box" 
+              type="digit" 
+              value="{{scores[item.id]}}"
+              data-id="{{item.id}}"
+              bindinput="onScoreInput"
+              placeholder="0"
+            />
+            <text wx:else class="score-value">{{item.score !== null && item.score !== undefined ? item.score : 0}} 分</text>
+          </view>
+        </view>
+      </view>
+      
+      <!-- 操作按钮 -->
+      <view wx:if="{{isEditingScores}}" class="score-actions-row">
+        <button class="score-btn-quick" bindtap="onQuickScore">一键积分</button>
+        <button class="score-btn-save" bindtap="saveScores">保存</button>
+        <button class="score-btn-cancel" bindtap="toggleEditScores">取消</button>
+      </view>
+    </view>
+    
+    <!-- 候补人员列表 (非预报名状态) -->
+    <view wx:if="{{tournament.status !== 'pre-registration' && waitingList.length > 0}}" class="participants-section card">
+      <!-- 候补人员副标题 -->
+      <view class="subsection-title">
+        <text>候补人员 ({{waitingList.length}}/{{tournament.maxWaitlist || 5}})</text>
+      </view>
+      
+      <view class="participants-grid">
+        <view 
+          wx:for="{{waitingList}}" 
+          wx:key="id" 
+          class="participant-card {{item.isMe ? 'is-me' : ''}}"
+        >
+          <!-- 左侧：头像区域 -->
+          <view class="card-left">
+            <!-- 代报标签 -->
+            <view wx:if="{{item.proxyName}}" class="proxy-tag {{item.isOwner ? 'is-owner' : ''}}">
+              <text>{{item.proxyName}}代报</text>
+            </view>
+            
+            <view class="card-avatar">
+              <image src="{{item.avatar}}" mode="aspectFill" />
+              <view wx:if="{{item.isMe}}" class="me-badge">我</view>
+            </view>
+          </view>
+          
+          <!-- 右侧：信息区域 -->
+          <view class="card-right">
+            <text class="card-name {{item.isMe ? 'is-me' : ''}}">{{item.name}}</text>
+            <text class="card-time">{{item.formattedJoinedAt}}</text>
+          </view>
+          
+          <!-- "..." 操作按钮 (使用预计算的 canShowCancelButton) -->
+          <view 
+            wx:if="{{item.canShowCancelButton && tournament.status !== 'finished-pending' && tournament.status !== 'finished-completed' && tournament.status !== 'cancelled'}}" 
+            class="more-btn"
+            data-participant="{{item}}"
+            catchtap="onTapParticipant"
+          >
+            <text>···</text>
+          </view>
+        </view>
+      </view>
+    </view>
+    
+    <!-- 7. 活动基本信息卡片 - 与网页版彩色统计方块一致 -->
+    <view class="info-section card">
+      <!-- 彩色统计方块 -->
+      <view class="stats-boxes">
+        <block wx:if="{{tournament.status === 'pre-registration'}}">
+          <!-- 预报名状态: 只显示蓝色预报名框 -->
+          <view class="stat-box stat-blue">
+            <text class="stat-label">预报名人数</text>
+            <text class="stat-value">{{players.length}}</text>
+          </view>
+        </block>
+        <block wx:else>
+          <!-- 其他状态: 显示报名和候补 -->
+          <view class="stat-box stat-green">
+            <text class="stat-label">上场人数</text>
+            <text class="stat-value">{{players.length}}/{{tournament.maxFieldPlayers || tournament.maxPlayers}}</text>
+          </view>
+          <view class="stat-box stat-yellow">
+            <text class="stat-label">候补人数</text>
+            <text class="stat-value">{{waitingList.length}}/{{tournament.maxWaitlist || 5}}</text>
+          </view>
+        </block>
+      </view>
+      
+      <!-- 费用统计 (待结算/已结束) -->
+      <view wx:if="{{tournament.status === 'finished-pending' || tournament.status === 'finished-completed'}}" class="stats-boxes" style="margin-top: 24rpx;">
+        <view class="stat-box stat-purple">
+          <text class="stat-label">总花费</text>
+          <text class="stat-value">¥{{tournament.totalCost || 0}}</text>
+        </view>
+        <view class="stat-box stat-indigo">
+          <text class="stat-label">本人花费</text>
+          <text class="stat-value">¥{{myTotalCost}}</text>
+        </view>
+      </view>
+    </view>
+    
+    <!-- 8. 活动详情和规则 -->
+    <view wx:if="{{tournament.description}}" class="description-section card">
+      <view class="section-title">
+        <text class="title-icon">📝</text>
+        <text>活动详情</text>
+      </view>
+      <text class="description-text" user-select="true">{{tournament.description}}</text>
+      
+      <!-- 补充图片 -->
+      <view class="description-images" wx:if="{{tournament.descriptionImages && tournament.descriptionImages.length > 0}}">
+        <image 
+          wx:for="{{tournament.descriptionImages}}" 
+          wx:key="*this" 
+          src="{{item}}" 
+          mode="widthFix" 
+          class="desc-image" 
+          bindtap="previewDescImage" 
+          data-url="{{item}}" 
+        />
+      </view>
+    </view>
+    
+    <view wx:if="{{tournament.rules && tournament.rules.length > 0}}" class="rules-section card">
+      <view class="section-title">
+        <text class="title-icon">📜</text>
+        <text>活动规则</text>
+      </view>
+      <view class="rules-list">
+        <view wx:for="{{tournament.rules}}" wx:key="*this" class="rule-item">
+          <text class="rule-number">{{index + 1}}</text>
+          <text class="rule-text" user-select="true">{{item}}</text>
+        </view>
+      </view>
+    </view>
+    
+    <!-- 底部安全区域 -->
+    <view class="bottom-safe-area"></view>
+  </scroll-view>
+  
+  <!-- 9. 操作按钮 (底部固定) - 只在预报名/报名中/候补/已满时显示 -->
+  <view wx:if="{{!loading && shouldShowEnrollButton}}" class="footer-actions">
+    <button 
+      class="enroll-btn {{enrollButtonDisabled ? 'disabled' : ''}}"
+      bindtap="showEnrollModal"
+      disabled="{{enrollButtonDisabled}}"
+    >
+      {{enrollButtonText}}
+    </button>
+  </view>
+  
+  <!-- 10. 报名模态框 -->
+  <view wx:if="{{showEnrollModal}}" class="modal-overlay" bindtap="closeEnrollModal">
+    <view class="modal" catchtap="stopPropagation">
+      <view class="modal-header">
+        <text class="modal-title">报名</text>
+        <text class="modal-close" bindtap="closeEnrollModal">×</text>
+      </view>
+      
+      <view class="modal-body">
+        <view class="enroll-options">
+          <view 
+            class="enroll-option {{enrollForSelf ? 'active' : ''}} {{hasEnrolledForSelf ? 'disabled' : ''}}"
+            data-self="{{true}}"
+            bindtap="onEnrollTypeChange"
+          >
+            <text>{{hasEnrolledForSelf ? '本人已报名' : '为自己报名'}}</text>
+          </view>
+          <view 
+            class="enroll-option {{!enrollForSelf ? 'active' : ''}} {{!canProxy ? 'disabled' : ''}}"
+            wx:if="{{tournament.proxyLimit !== 0}}"
+            data-self="{{false}}"
+            bindtap="onEnrollTypeChange"
+          >
+            <text>{{myProxyCount >= tournament.proxyLimit ? '代报已达上限(' + tournament.proxyLimit + ')' : '为他人报名'}}</text>
+          </view>
+        </view>
+        
+        <view wx:if="{{!enrollForSelf}}" class="enroll-name-input">
+          <view class="enroll-name-label">
+            <text>被报名人姓名：</text>
+            <text class="label-hint">(为他人报名无法获得活动积分)</text>
+          </view>
+          <input 
+            class="enroll-input-field"
+            placeholder="请输入姓名"
+            placeholder-class="input-placeholder"
+            value="{{enrollForOtherName}}"
+            bindinput="onEnrollNameInput"
+          />
+        </view>
+      </view>
+      
+      <view class="modal-footer">
+        <button class="btn-secondary" bindtap="closeEnrollModal">取消</button>
+        <button class="btn-primary" bindtap="confirmEnroll">确认报名</button>
+      </view>
+    </view>
+  </view>
+  
+  <!-- 12. 管理员添加人员模态框 - 与网页版一致 -->
+  <view wx:if="{{showAdminAddModal}}" class="modal-overlay" bindtap="closeAdminAddModal">
+    <view class="modal admin-add-modal" catchtap="stopPropagation">
+      <!-- 红色标题 -->
+      <view class="admin-modal-title">
+        <text>管理员加人(强制上场)</text>
+      </view>
+      
+      <view class="modal-body">
+        <!-- 姓名输入 -->
+        <view class="admin-form-item">
+          <text class="admin-form-label">姓名</text>
+          <input 
+            class="admin-form-input"
+            placeholder="请输入报名人员姓名"
+            value="{{adminAddName}}"
+            bindinput="onAdminAddNameInput"
+          />
+        </view>
+        
+        <!-- 类型选择 -->
+        <view class="admin-form-item">
+          <text class="admin-form-label">类型</text>
+          <view class="admin-type-btn">
+            <text>上场人员</text>
+          </view>
+        </view>
+      </view>
+      
+      <!-- 底部按钮 -->
+      <view class="admin-modal-footer">
+        <button class="admin-cancel-btn" bindtap="closeAdminAddModal">取消</button>
+        <button class="admin-confirm-btn" bindtap="confirmAdminAdd">确认添加</button>
+      </view>
+    </view>
+  </view>
+  
+  <!-- 13. 管理员操作菜单 -->
+  <view wx:if="{{showAdminMenu}}" class="modal-overlay" bindtap="closeAdminMenu">
+    <view class="action-sheet" catchtap="stopPropagation">
+      <view class="action-sheet-header">
+        <text>{{selectedParticipant.name}}</text>
+      </view>
+      <view class="action-sheet-body">
+        <view class="action-item danger" bindtap="cancelEnrollment">
+          <text>取消报名</text>
+        </view>
+      </view>
+      <view class="action-sheet-cancel" bindtap="closeAdminMenu">
+        <text>取消</text>
+      </view>
+    </view>
+  </view>
+  
+  <!-- 隐藏的Canvas用于生成分享图片 -->
+  <canvas 
+    type="2d" 
+    id="shareCanvas" 
+    style="position: fixed; left: -9999px; top: -9999px; width: 280px; height: 230px;"
+  ></canvas>
+</view>

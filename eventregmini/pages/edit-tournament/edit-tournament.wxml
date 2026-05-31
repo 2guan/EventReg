@@ -1,0 +1,342 @@
+<!--
+  编辑活动页面
+  与网页版 EditTournament.tsx 布局完全一致
+-->
+
+<view class="page {{theme === 'dark' ? 'dark' : ''}}">
+  <!-- 顶部导航 -->
+  <view class="header">
+    <view class="back-btn" bindtap="goBack">
+      <text>←</text>
+    </view>
+    <text class="header-title">编辑活动</text>
+    <view class="theme-btn" bindtap="toggleTheme">
+      <text>{{theme === 'light' ? '🌙' : '☀️'}}</text>
+    </view>
+  </view>
+  
+  <!-- 加载状态 -->
+  <view wx:if="{{loading}}" class="loading-fullscreen">
+    <view class="loading-spinner"></view>
+    <text class="loading-text">加载中...</text>
+  </view>
+  
+  <scroll-view wx:else class="main-content" scroll-y enhanced show-scrollbar="{{false}}">
+    <!-- 提示信息 -->
+    <view class="tip-card {{showSettlement ? 'green' : 'blue'}}">
+      <text class="tip-icon">{{showSettlement ? '🏆' : 'ℹ️'}}</text>
+      <view class="tip-content">
+        <text class="tip-title">{{showSettlement ? '结算提示' : '编辑活动指南'}}</text>
+        <text class="tip-desc">{{showSettlement ? '当前活动状态为已结束，请输入总金额进行结算。' : '预报名状态下无需设置人数限制，正式报名状态下需设置最大人数和候补人数。将状态修改为已结束时，需要输入活动总金额。'}}</text>
+      </view>
+    </view>
+    
+    <!-- 表单区域 -->
+    <view class="form-card">
+      <!-- 封面选择 -->
+      <view class="form-group">
+        <text class="form-label">选择封面 <text class="required">*</text></text>
+        <view class="banner-preview" bindtap="showBannerSelector">
+          <image src="{{formData.image}}" mode="aspectFill" />
+          <view class="banner-overlay">
+            <text>更换封面</text>
+          </view>
+        </view>
+      </view>
+      
+      <!-- 活动名称 -->
+      <view class="form-group">
+        <text class="form-label">活动名称 <text class="required">*</text></text>
+        <input 
+          class="form-input {{errors.name ? 'error' : ''}}" 
+          placeholder="请输入活动名称" 
+          placeholder-class="input-placeholder"
+          value="{{formData.name}}" 
+          data-field="name" 
+          bindinput="onInput"
+        />
+        <text wx:if="{{errors.name}}" class="error-text">{{errors.name}}</text>
+      </view>
+      
+      <!-- 活动状态 -->
+      <view class="form-group">
+        <text class="form-label">活动状态</text>
+        <picker mode="selector" range="{{statusOptions}}" range-key="label" value="{{statusIndex}}" bindchange="onStatusChange">
+          <view class="form-picker">
+            <text>{{currentStatusLabel}}</text>
+            <text class="picker-arrow">▼</text>
+          </view>
+        </picker>
+      </view>
+      
+      <!-- 活动公开状态 -->
+      <view class="form-group">
+        <text class="form-label">活动公开状态</text>
+        <picker mode="selector" range="{{visibilityOptions}}" range-key="label" value="{{visibilityIndex}}" bindchange="onVisibilityChange">
+          <view class="form-picker">
+            <text>{{currentVisibilityLabel}}</text>
+            <text class="picker-arrow">▼</text>
+          </view>
+        </picker>
+      </view>
+      
+      <!-- 时间设置 -->
+      <view class="form-row">
+        <view class="form-group half">
+          <text class="form-label">开始日期 <text class="required">*</text></text>
+          <picker mode="date" value="{{startDate}}" bindchange="onStartDateChange">
+            <view class="form-picker">
+              <text>{{startDate || '选择日期'}}</text>
+              <text class="picker-arrow">📅</text>
+            </view>
+          </picker>
+        </view>
+        <view class="form-group half">
+          <text class="form-label">开始时间 <text class="required">*</text></text>
+          <picker mode="time" value="{{startTime}}" bindchange="onStartTimeChange">
+            <view class="form-picker">
+              <text>{{startTime || '选择时间'}}</text>
+              <text class="picker-arrow">⏰</text>
+            </view>
+          </picker>
+        </view>
+      </view>
+      
+      <view class="form-row">
+        <view class="form-group half">
+          <text class="form-label">结束日期 <text class="required">*</text></text>
+          <picker mode="date" value="{{endDate}}" bindchange="onEndDateChange">
+            <view class="form-picker">
+              <text>{{endDate || '选择日期'}}</text>
+              <text class="picker-arrow">📅</text>
+            </view>
+          </picker>
+        </view>
+        <view class="form-group half">
+          <text class="form-label">结束时间 <text class="required">*</text></text>
+          <picker mode="time" value="{{endTime}}" bindchange="onEndTimeChange">
+            <view class="form-picker">
+              <text>{{endTime || '选择时间'}}</text>
+              <text class="picker-arrow">⏰</text>
+            </view>
+          </picker>
+        </view>
+      </view>
+      
+      <!-- 地点 -->
+      <view class="form-group">
+        <text class="form-label">活动地点 <text class="required">*</text></text>
+        <input 
+          class="form-input {{errors.location ? 'error' : ''}}" 
+          placeholder="请输入活动地点" 
+          placeholder-class="input-placeholder"
+          value="{{formData.location}}" 
+          data-field="location" 
+          bindinput="onInput"
+        />
+        <text wx:if="{{errors.location}}" class="error-text">{{errors.location}}</text>
+      </view>
+      
+      <!-- 人数设置 -->
+      <view class="form-group">
+        <text class="form-label">最大参与人数 <text class="required">*</text></text>
+        <input 
+          class="form-input number-input" 
+          type="number" 
+          placeholder="20"
+          placeholder-class="input-placeholder"
+          value="{{formData.maxPlayers}}" 
+          data-field="maxPlayers" 
+          bindinput="onInput"
+        />
+      </view>
+      
+      <view class="form-row">
+        <view class="form-group half">
+          <text class="form-label">最大上场人数</text>
+          <input 
+            class="form-input number-input" 
+            type="number" 
+            placeholder="10"
+            placeholder-class="input-placeholder"
+            value="{{formData.maxFieldPlayers}}" 
+            data-field="maxFieldPlayers" 
+            bindinput="onInput"
+          />
+        </view>
+        <view class="form-group half">
+          <text class="form-label">最大候补人数</text>
+          <input 
+            class="form-input number-input" 
+            type="number" 
+            placeholder="5"
+            placeholder-class="input-placeholder"
+            value="{{formData.maxWaitlist}}" 
+            data-field="maxWaitlist" 
+            bindinput="onInput"
+          />
+        </view>
+      </view>
+
+      <view class="form-row">
+        <view class="form-group half">
+          <text class="form-label">每人可代报数</text>
+          <input 
+            class="form-input number-input" 
+            type="number" 
+            placeholder="2"
+            placeholder-class="input-placeholder"
+            value="{{formData.proxyLimit}}" 
+            data-field="proxyLimit" 
+            bindinput="onInput"
+          />
+        </view>
+      </view>
+      
+      <view class="form-group" wx:if="{{formData.status === 'finished-pending' || formData.status === 'finished-completed'}}">
+        <text class="form-label">总费用 <text class="required">*</text></text>
+        <input 
+          class="form-input number-input" 
+          type="digit" 
+          placeholder="0"
+          placeholder-class="input-placeholder"
+          value="{{formData.totalCost}}" 
+          data-field="totalCost" 
+          bindinput="onInput"
+        />
+      </view>
+
+      <!-- 费用说明 -->
+      <view class="form-group" wx:if="{{formData.status === 'finished-pending' || formData.status === 'finished-completed'}}">
+        <text class="form-label">费用说明 (选填)</text>
+        <textarea 
+          class="form-textarea" 
+          placeholder="可输入费用相关说明，如支付方式、费用明细等（最多100字）" 
+          placeholder-class="input-placeholder"
+          value="{{formData.costNote}}" 
+          data-field="costNote" 
+          bindinput="onInput"
+          maxlength="100"
+        />
+        <text class="char-count">{{formData.costNote ? formData.costNote.length : 0}}/100</text>
+      </view>
+      
+      <!-- 活动描述 -->
+      <view class="form-group">
+        <text class="form-label">活动描述 <text class="required">*</text></text>
+        <textarea 
+          class="form-textarea {{errors.description ? 'error' : ''}}" 
+          placeholder="请详细描述活动情况" 
+          placeholder-class="input-placeholder"
+          value="{{formData.description}}" 
+          data-field="description" 
+          bindinput="onInput"
+          maxlength="-1"
+        />
+        <text wx:if="{{errors.description}}" class="error-text">{{errors.description}}</text>
+      </view>
+
+      <!-- 描述图片上传 -->
+      <view class="form-group">
+        <view class="form-label-row">
+          <text class="form-label">补充图片 (选填)</text>
+          <view class="add-btn" bindtap="uploadDescriptionImage">
+            <text>+ 添加图片</text>
+          </view>
+        </view>
+        
+        <view class="image-grid" wx:if="{{formData.descriptionImages && formData.descriptionImages.length > 0}}">
+          <view wx:for="{{formData.descriptionImages}}" wx:key="index" class="image-item">
+            <image src="{{item}}" mode="aspectFill" bindtap="previewDescriptionImage" data-url="{{item}}"></image>
+            <view class="remove-img-btn" catchtap="removeDescriptionImage" data-index="{{index}}">×</view>
+          </view>
+        </view>
+      </view>
+      
+      <!-- 活动规则 -->
+      <view class="form-group">
+        <view class="form-label-row">
+          <text class="form-label">活动规则 (选填)</text>
+          <view class="add-btn" bindtap="addRule">
+            <text>+ 添加规则</text>
+          </view>
+        </view>
+        <view wx:for="{{formData.rules}}" wx:key="index" class="rule-row">
+          <input 
+            class="form-input rule-input" 
+            placeholder="规则 {{index + 1}}" 
+            placeholder-class="input-placeholder"
+            value="{{item}}" 
+            data-index="{{index}}" 
+            bindinput="onRuleInput"
+          />
+          <view class="remove-btn" data-index="{{index}}" bindtap="removeRule">
+            <text>×</text>
+          </view>
+        </view>
+      </view>
+      
+      <!-- 组织者信息 -->
+      <view class="form-row">
+        <view class="form-group half">
+          <text class="form-label">组织者</text>
+          <input 
+            class="form-input" 
+            placeholder="选填" 
+            placeholder-class="input-placeholder"
+            value="{{formData.organizer}}" 
+            data-field="organizer" 
+            bindinput="onInput"
+          />
+        </view>
+        <view class="form-group half">
+          <text class="form-label">联系方式</text>
+          <input 
+            class="form-input" 
+            placeholder="选填" 
+            placeholder-class="input-placeholder"
+            value="{{formData.contactInfo}}" 
+            data-field="contactInfo" 
+            bindinput="onInput"
+          />
+        </view>
+      </view>
+    </view>
+    
+    <!-- 提交按钮 -->
+    <view class="form-actions">
+      <button class="btn-cancel" bindtap="goBack">取消</button>
+      <button class="btn-submit" bindtap="handleSubmit" disabled="{{isSubmitting}}">
+        {{isSubmitting ? '保存中...' : '保存修改'}}
+      </button>
+    </view>
+    
+    <view class="bottom-safe-area"></view>
+  </scroll-view>
+  
+  <!-- 封面选择模态框 -->
+  <view wx:if="{{showBannerModal}}" class="modal-overlay" bindtap="closeBannerModal">
+    <view class="modal" catchtap="stopPropagation">
+      <view class="modal-header">
+        <text class="modal-title">选择封面</text>
+        <view class="modal-close" bindtap="closeBannerModal">
+          <text>✕</text>
+        </view>
+      </view>
+      <scroll-view class="modal-body" scroll-y>
+        <view class="banner-grid">
+          <view 
+            wx:for="{{banners}}" 
+            wx:key="*this" 
+            class="banner-option {{formData.image === item ? 'selected' : ''}}" 
+            data-banner="{{item}}" 
+            bindtap="selectBanner"
+          >
+            <image src="{{item}}" mode="aspectFill" />
+            <view wx:if="{{formData.image === item}}" class="banner-check">✓</view>
+          </view>
+        </view>
+      </scroll-view>
+    </view>
+  </view>
+</view>

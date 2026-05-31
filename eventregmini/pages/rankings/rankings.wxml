@@ -1,0 +1,138 @@
+<!--
+  积分排行榜页面
+  与网页版 Rankings.tsx 布局完全一致
+-->
+
+<view class="page {{theme === 'dark' ? 'dark' : ''}}">
+  <!-- 顶部导航 -->
+  <view class="header">
+    <text class="header-title">积分排行榜</text>
+    <view class="header-right">
+      <view class="theme-btn" bindtap="toggleTheme">
+        <text>{{theme === 'light' ? '🌙' : '☀️'}}</text>
+      </view>
+      <message-center theme="{{theme}}"></message-center>
+    </view>
+  </view>
+  
+  <scroll-view class="main-content" scroll-y enhanced show-scrollbar="{{false}}">
+    <!-- 前三名展示 - 活动之星 -->
+    <view class="top-stars-section">
+      <view class="section-title">
+        <text class="title-icon">🏆</text>
+        <text>活动之星</text>
+      </view>
+      
+      <view class="top-three-grid">
+        <!-- 第二名 -->
+        <view class="top-card second">
+          <view class="top-avatar">
+            <image src="{{rankData[1].avatar}}" mode="aspectFill" />
+          </view>
+          <view class="rank-badge silver">2</view>
+          <text class="top-name">{{rankData[1].name || '待定'}}</text>
+          <text class="top-points">{{rankData[1].points || 0}} 积分</text>
+        </view>
+        
+        <!-- 第一名 -->
+        <view class="top-card first">
+          <view class="champion-label">冠军</view>
+          <view class="top-avatar gold-ring">
+            <image src="{{rankData[0].avatar}}" mode="aspectFill" />
+          </view>
+          <view class="rank-badge gold">1</view>
+          <text class="top-name bold">{{rankData[0].name || '待定'}}</text>
+          <text class="top-points gold-text">{{rankData[0].points || 0}} 积分</text>
+        </view>
+        
+        <!-- 第三名 -->
+        <view class="top-card third">
+          <view class="top-avatar">
+            <image src="{{rankData[2].avatar}}" mode="aspectFill" />
+          </view>
+          <view class="rank-badge bronze">3</view>
+          <text class="top-name">{{rankData[2].name || '待定'}}</text>
+          <text class="top-points">{{rankData[2].points || 0}} 积分</text>
+        </view>
+      </view>
+    </view>
+    
+    <!-- 搜索栏 -->
+    <view class="search-section">
+      <view class="search-bar">
+        <text class="search-icon">🔍</text>
+        <input 
+          class="search-input" 
+          placeholder="搜索用户" 
+          placeholder-class="search-placeholder"
+          value="{{searchTerm}}" 
+          bindinput="onSearchInput"
+        />
+      </view>
+    </view>
+    
+    <!-- 我的排名 -->
+    <view wx:if="{{myRank}}" class="my-rank-card">
+      <view class="my-rank-avatar">
+        <image src="{{myRank.avatar}}" mode="aspectFill" />
+      </view>
+      <view class="my-rank-info">
+        <text class="my-rank-label">我的排名</text>
+        <text class="my-rank-position">第 {{myRank.rank}} 名</text>
+      </view>
+      <view class="my-rank-points">
+        <text class="points-value">{{myRank.points}}</text>
+        <text class="points-label">总积分</text>
+      </view>
+    </view>
+    
+    <!-- 排行榜列表 -->
+    <view class="rank-list-card">
+      <view class="card-header">
+        <text class="card-title">排行榜</text>
+      </view>
+      
+      <view class="rank-list" wx:if="{{filteredRanks.length > 0}}">
+        <view 
+          wx:for="{{filteredRanks}}" 
+          wx:key="id" 
+          class="rank-item {{item.isMe ? 'is-me' : ''}}"
+        >
+          <!-- 排名 -->
+          <view class="rank-number">
+            <view wx:if="{{item.rank <= 3}}" class="rank-badge-inline {{item.rank === 1 ? 'gold' : item.rank === 2 ? 'silver' : 'bronze'}}">
+              {{item.rank}}
+            </view>
+            <text wx:else class="rank-text">{{item.rank}}</text>
+          </view>
+          
+          <!-- 头像 -->
+          <view class="rank-avatar {{item.isMe ? 'my-ring' : ''}}">
+            <image src="{{item.avatar}}" mode="aspectFill" />
+            <view wx:if="{{item.isMe}}" class="me-badge">我</view>
+          </view>
+          
+          <!-- 用户名 -->
+          <view class="rank-name-wrapper">
+            <text class="rank-name {{item.isMe ? 'my-name' : ''}}">{{item.name}}</text>
+          </view>
+          
+          <!-- 积分 -->
+          <view class="rank-points-wrapper">
+            <text class="rank-points-value">{{item.points}}</text>
+            <text class="rank-points-label">积分</text>
+          </view>
+        </view>
+      </view>
+      
+      <!-- 空状态 -->
+      <view wx:else class="empty-state">
+        <view class="empty-icon">👥</view>
+        <text class="empty-title">暂无排名数据</text>
+        <text class="empty-desc">当前筛选条件下没有找到用户</text>
+      </view>
+    </view>
+    
+    <view class="bottom-safe-area"></view>
+  </scroll-view>
+</view>

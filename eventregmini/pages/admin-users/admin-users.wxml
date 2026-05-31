@@ -1,0 +1,224 @@
+<!--
+  用户管理页面
+  与网页版 AdminUsers.tsx 布局完全一致
+-->
+
+<view class="page {{theme === 'dark' ? 'dark' : ''}}">
+  <!-- 顶部导航 -->
+  <view class="header">
+    <view class="header-left">
+      <view class="back-btn" bindtap="goBack">
+        <text>←</text>
+      </view>
+      <text class="header-title">用户管理</text>
+    </view>
+    <view class="settings-btn" bindtap="openSettings">
+      <text class="settings-text">注册设置</text>
+    </view>
+  </view>
+  
+  <scroll-view class="main-content" scroll-y enhanced show-scrollbar="{{false}}">
+    <!-- 搜索框 -->
+    <view class="search-box">
+      <text class="search-icon">🔍</text>
+      <input 
+        class="search-input" 
+        placeholder="搜索用户名或昵称..." 
+        placeholder-class="search-placeholder"
+        value="{{searchTerm}}"
+        bindinput="onSearchInput"
+      />
+    </view>
+    
+    <!-- 用户列表 -->
+    <view wx:if="{{loading}}" class="loading-container">
+      <view class="loading-spinner"></view>
+    </view>
+    
+    <view wx:elif="{{filteredUsers.length > 0}}" class="user-list">
+      <view wx:for="{{filteredUsers}}" wx:key="id" class="user-card">
+        <!-- 用户信息头部 -->
+        <view class="card-header">
+          <view class="user-profile">
+            <image class="user-avatar" src="{{item.avatar}}" mode="aspectFill" />
+            <view class="user-details">
+              <text class="user-name">{{item.nickname || item.username}}</text>
+              <text class="user-username">@{{item.username}}</text>
+            </view>
+          </view>
+          <view class="header-right">
+            <view class="points-badge">当前积分：{{item.total_points || 0}}分</view>
+            <view class="role-tag {{item.roleClass}}">{{item.roleText}}</view>
+          </view>
+        </view>
+        
+        <!-- 操作按钮 -->
+        <view class="action-grid">
+          <view class="action-item" data-user="{{item}}" data-action="edit_profile" bindtap="openAction">
+            <text class="action-text">编辑资料</text>
+          </view>
+          <view class="action-item add" data-user="{{item}}" data-action="add_points" bindtap="openAction">
+            <text class="action-text">加分</text>
+          </view>
+          <view class="action-item deduct" data-user="{{item}}" data-action="deduct_points" bindtap="openAction">
+            <text class="action-text">扣分</text>
+          </view>
+        </view>
+      </view>
+    </view>
+    
+    <view wx:else class="empty-state">
+      <text class="empty-icon">👥</text>
+      <text class="empty-title">没有找到用户</text>
+      <text class="empty-desc">尝试更换搜索关键词</text>
+    </view>
+    
+    <view class="bottom-safe-area"></view>
+  </scroll-view>
+  
+  <!-- 编辑用户模态框 -->
+  <view wx:if="{{showModal}}" class="modal-overlay" bindtap="closeModal">
+    <view class="modal" catchtap="stopPropagation">
+      <view class="modal-header">
+        <text class="modal-title">{{modalTitle}}</text>
+        <view class="modal-close" bindtap="closeModal">
+          <text>✕</text>
+        </view>
+      </view>
+      
+      <view class="modal-body">
+        <view class="modal-user-info">
+          正在操作用户: <text class="highlight">@{{selectedUser.username}}</text>
+        </view>
+        
+        <!-- 编辑资料表单 -->
+        <block wx:if="{{actionType === 'edit_profile'}}">
+          <!-- 头像选择 -->
+          <view class="avatar-section">
+            <view class="avatar-preview" bindtap="toggleAvatarSelection">
+              <image class="preview-image" src="{{editAvatar}}" mode="aspectFill" />
+              <view class="avatar-overlay">
+                <text>更换</text>
+              </view>
+            </view>
+            
+            <view wx:if="{{showAvatarSelection}}" class="avatar-grid">
+              <image 
+                wx:for="{{avatars}}" 
+                wx:key="index"
+                class="avatar-option {{editAvatar === item ? 'selected' : ''}}"
+                src="{{item}}"
+                mode="aspectFill"
+                data-avatar="{{item}}"
+                bindtap="selectAvatar"
+              />
+            </view>
+          </view>
+          
+          <!-- 昵称 -->
+          <view class="form-group">
+            <text class="form-label">昵称</text>
+            <input 
+              class="form-input" 
+              value="{{editNickname}}" 
+              bindinput="onNicknameInput"
+              placeholder="请输入昵称"
+            />
+          </view>
+          
+          <!-- 角色 -->
+          <view class="form-group">
+            <text class="form-label">角色</text>
+            <picker class="form-picker" mode="selector" range="{{roleOptions}}" range-key="label" value="{{roleIndex}}" bindchange="onRoleChange">
+              <view class="picker-value">{{roleOptions[roleIndex].label}}</view>
+            </picker>
+          </view>
+          
+          <!-- 密码 -->
+          <view class="form-group">
+            <text class="form-label">重置密码 (留空则不修改)</text>
+            <input 
+              class="form-input" 
+              value="{{editPassword}}" 
+              bindinput="onPasswordInput"
+              placeholder="输入新密码"
+            />
+          </view>
+          
+          <!-- 删除用户 -->
+          <view class="danger-zone">
+            <button class="delete-user-btn" bindtap="deleteUser">
+              删除该用户
+            </button>
+          </view>
+        </block>
+        
+        <!-- 积分调整表单 -->
+        <block wx:if="{{actionType === 'add_points' || actionType === 'deduct_points'}}">
+          <view class="form-group">
+            <text class="form-label">{{actionType === 'add_points' ? '增加点数 (正整数)' : '扣除点数 (正整数)'}}</text>
+            <input 
+              class="form-input points-input" 
+              type="number" 
+              value="{{pointsDiff}}" 
+              bindinput="onPointsDiffInput"
+              placeholder="输入数值"
+              focus="{{true}}"
+            />
+          </view>
+        </block>
+      </view>
+      
+      <view class="modal-footer">
+        <button class="btn-cancel" bindtap="closeModal">取消</button>
+        <button class="btn-confirm {{actionType === 'deduct_points' ? 'danger' : ''}}" bindtap="handleSave">
+          确认{{actionType === 'deduct_points' ? '扣除' : '保存'}}
+        </button>
+      </view>
+    </view>
+  </view>
+  
+  <!-- 注册设置模态框 -->
+  <view wx:if="{{showSettingsModal}}" class="modal-overlay" bindtap="closeSettingsModal">
+    <view class="modal settings-modal" catchtap="stopPropagation">
+      <view class="modal-header">
+        <text class="modal-title">新用户注册设置</text>
+        <view class="modal-close" bindtap="closeSettingsModal">
+          <text>✕</text>
+        </view>
+      </view>
+      
+      <view class="modal-body">
+        <view class="form-group">
+          <text class="form-label">默认状态</text>
+          <text class="form-hint">设置新用户注册后的初始状态。</text>
+          
+          <view class="radio-options">
+            <view 
+              class="radio-option {{defaultRole === 'pending' ? 'selected' : ''}}"
+              bindtap="selectDefaultRole"
+              data-role="pending"
+            >
+              <view class="radio-circle {{defaultRole === 'pending' ? 'checked' : ''}}"></view>
+              <text class="radio-label">待审核 (需管理员批准)</text>
+            </view>
+            
+            <view 
+              class="radio-option {{defaultRole === 'user' ? 'selected' : ''}}"
+              bindtap="selectDefaultRole"
+              data-role="user"
+            >
+              <view class="radio-circle {{defaultRole === 'user' ? 'checked' : ''}}"></view>
+              <text class="radio-label">正式用户 (自动批准)</text>
+            </view>
+          </view>
+        </view>
+      </view>
+      
+      <view class="modal-footer">
+        <button class="btn-cancel" bindtap="closeSettingsModal">取消</button>
+        <button class="btn-confirm" bindtap="saveSettings">保存设置</button>
+      </view>
+    </view>
+  </view>
+</view>

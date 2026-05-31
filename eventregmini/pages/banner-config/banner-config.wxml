@@ -1,0 +1,122 @@
+<!--
+  活动图片配置页面
+  管理 Banner 默认图片和自定义封面
+-->
+
+<view class="page {{theme === 'dark' ? 'dark' : ''}}">
+  <!-- 顶部导航 -->
+  <view class="header">
+    <view class="back-btn" bindtap="goBack">
+      <text>←</text>
+    </view>
+    <text class="header-title">活动图片配置</text>
+    <view class="theme-btn" bindtap="toggleTheme">
+      <text>{{theme === 'light' ? '🌙' : '☀️'}}</text>
+    </view>
+  </view>
+
+  <!-- 主内容区 -->
+  <scroll-view class="main-content" scroll-y enhanced show-scrollbar="{{false}}">
+    <!-- 说明信息 -->
+    <view class="info-card">
+      <view class="info-icon">🖼️</view>
+      <view class="info-text">
+        <text class="info-title">图片配置说明</text>
+        <text class="info-desc">点击「替换」按钮替换默认 Banner。您也可以上传不限数量的自定义封面。建议使用宽高比 16:3 的图片。</text>
+      </view>
+    </view>
+
+    <!-- 加载中 -->
+    <view wx:if="{{loading}}" class="loading-container">
+      <view class="loading-spinner"></view>
+      <text class="loading-text">加载中...</text>
+    </view>
+
+    <view wx:else>
+      <!-- 自定义封面区域 -->
+      <view class="section-header">
+        <text class="section-title">自定义封面</text>
+        <button 
+          class="upload-custom-btn {{uploadingId === 'custom' ? 'disabled' : ''}}"
+          bindtap="uploadCustomBanner"
+          disabled="{{uploadingId === 'custom'}}"
+        >
+          <text wx:if="{{uploadingId === 'custom'}}">上传中...</text>
+          <text wx:else>+ 上传新封面</text>
+        </button>
+      </view>
+
+      <view wx:if="{{customBanners.length === 0}}" class="empty-custom">
+        <text class="empty-text">暂无自定义封面，点击上方按钮上传</text>
+      </view>
+
+      <view wx:else class="banner-grid">
+        <view 
+          wx:for="{{customBanners}}" 
+          wx:key="id" 
+          class="banner-card"
+        >
+          <view class="banner-image-wrapper">
+            <image 
+              class="banner-image" 
+              src="{{item.fullUrl}}" 
+              mode="aspectFill"
+            />
+          </view>
+          <view class="banner-actions">
+            <text class="banner-label custom-label">{{item.filename}}</text>
+            <button 
+              class="delete-btn"
+              data-filename="{{item.filename}}"
+              bindtap="deleteCustomBanner"
+            >
+              <text>删除</text>
+            </button>
+          </view>
+        </view>
+      </view>
+
+      <!-- 系统默认封面区域 -->
+      <view class="section-header" style="margin-top: 32rpx;">
+        <text class="section-title">系统默认封面</text>
+      </view>
+
+      <view class="banner-grid">
+        <view 
+          wx:for="{{defaultBanners}}" 
+          wx:key="id" 
+          class="banner-card"
+        >
+          <!-- 图片预览 -->
+          <view class="banner-image-wrapper">
+            <image 
+              class="banner-image" 
+              src="{{item.fullUrl}}" 
+              mode="aspectFill"
+            />
+            <!-- 上传中遮罩 -->
+            <view wx:if="{{uploadingId === item.id}}" class="upload-overlay">
+              <view class="upload-spinner"></view>
+            </view>
+          </view>
+
+          <!-- 操作区域 -->
+          <view class="banner-actions">
+            <text class="banner-label">Banner {{item.id < 10 ? '0' : ''}}{{item.id}}</text>
+            <button 
+              class="replace-btn {{uploadingId !== null ? 'disabled' : ''}}"
+              data-id="{{item.id}}"
+              bindtap="uploadBanner"
+              disabled="{{uploadingId !== null}}"
+            >
+              <text>替换</text>
+            </button>
+          </view>
+        </view>
+      </view>
+    </view>
+
+    <!-- 底部安全区域 -->
+    <view class="bottom-safe-area"></view>
+  </scroll-view>
+</view>

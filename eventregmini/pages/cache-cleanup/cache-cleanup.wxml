@@ -1,0 +1,87 @@
+<!--
+  缓存日志清理页面
+  管理系统日志、通知记录、临时文件等缓存数据
+-->
+
+<view class="page {{theme === 'dark' ? 'dark' : ''}}">
+  <!-- 顶部导航 -->
+  <view class="header">
+    <view class="back-btn" bindtap="goBack">
+      <text>←</text>
+    </view>
+    <text class="header-title">缓存日志清理</text>
+    <view class="theme-btn" bindtap="toggleTheme">
+      <text>{{theme === 'light' ? '🌙' : '☀️'}}</text>
+    </view>
+  </view>
+
+  <!-- 主内容区 -->
+  <scroll-view class="main-content" scroll-y enhanced show-scrollbar="{{false}}">
+    <!-- 说明信息 -->
+    <view class="info-card warning">
+      <view class="info-icon">⚠️</view>
+      <view class="info-text">
+        <text class="info-title">注意事项</text>
+        <text class="info-desc">清理操作不可撤销。正在使用的用户头像不会被删除。</text>
+      </view>
+    </view>
+
+    <!-- 加载中 -->
+    <view wx:if="{{loading}}" class="loading-container">
+      <view class="loading-spinner"></view>
+      <text class="loading-text">加载统计数据...</text>
+    </view>
+
+    <!-- 清理项列表 -->
+    <view wx:else class="cleanup-list">
+      <view 
+        wx:for="{{cleanupItems}}" 
+        wx:key="key" 
+        class="cleanup-item"
+      >
+        <view class="item-left">
+          <view class="item-icon {{item.iconBg}}">
+            <text>{{item.icon}}</text>
+          </view>
+          <view class="item-info">
+            <view class="item-header">
+              <text class="item-name">{{item.name}}</text>
+              <text wx:if="{{item.isEmpty}}" class="empty-tag">已清空</text>
+            </view>
+            <text class="item-desc">{{item.description}}</text>
+            <view class="item-stats">
+              <text wx:if="{{item.count !== undefined}}" class="stat-text">{{item.count}} 条</text>
+              <text wx:if="{{item.sizeText && item.size > 0}}" class="stat-text">{{item.sizeText}}</text>
+            </view>
+          </view>
+        </view>
+        
+        <button 
+          class="cleanup-btn {{item.isEmpty || cleaningItem !== null ? 'disabled' : ''}}"
+          data-key="{{item.key}}"
+          data-name="{{item.name}}"
+          bindtap="handleCleanup"
+          disabled="{{item.isEmpty || cleaningItem !== null}}"
+        >
+          <view wx:if="{{cleaningItem === item.key}}" class="btn-spinner"></view>
+          <text>{{item.isEmpty ? '已清空' : '清理'}}</text>
+        </button>
+      </view>
+    </view>
+
+    <!-- 一键清理 -->
+    <view wx:if="{{!loading}}" class="cleanup-all-section">
+      <button 
+        class="cleanup-all-btn {{cleaningItem !== null ? 'disabled' : ''}}"
+        bindtap="handleCleanupAll"
+        disabled="{{cleaningItem !== null}}"
+      >
+        <view wx:if="{{cleaningItem === 'all'}}" class="btn-spinner white"></view>
+        <text>一键清理全部</text>
+      </button>
+    </view>
+
+    <!-- 底部安全区域 -->
+    <view class="bottom-safe-area"></view>
+  </scroll-view>
+</view>

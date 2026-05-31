@@ -1,0 +1,830 @@
+/**
+ * 管理中心页面样式
+ * 与网页版 Admin.tsx 样式完全一致
+ */
+
+.page {
+  min-height: 100vh;
+  background-color: #f9fafb;
+  display: flex;
+  flex-direction: column;
+}
+
+.page.dark {
+  background-color: #111827;
+}
+
+/* 顶部导航 */
+.header {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  background-color: #ffffff;
+  padding: 24rpx 32rpx;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-shadow: 0 2rpx 4rpx rgba(0, 0, 0, 0.05);
+}
+
+.dark .header {
+  background-color: #1f2937;
+}
+
+.back-btn {
+  width: 72rpx;
+  height: 72rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  font-size: 40rpx;
+  color: #1f2937;
+}
+
+.dark .back-btn {
+  color: #ffffff;
+}
+
+.home-btn {
+  padding: 10rpx 20rpx;
+  background-color: #f3f4f6;
+  border-radius: 32rpx;
+  font-size: 24rpx;
+  color: #1f2937;
+}
+
+.dark .home-btn {
+  background-color: #374151;
+  color: #ffffff;
+}
+
+.header-title {
+  font-size: 36rpx;
+  font-weight: 700;
+  color: #1f2937;
+}
+
+.dark .header-title {
+  color: #ffffff;
+}
+
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 12rpx;
+}
+
+.theme-btn,
+.logout-btn {
+  width: 80rpx;
+  height: 80rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+}
+
+.theme-btn text,
+.logout-btn text {
+  font-size: 40rpx;
+}
+
+/* 主内容区 */
+.main-content {
+  flex: 1;
+  padding: 24rpx;
+}
+
+/* 管理员信息卡片 */
+.admin-banner {
+  position: relative;
+  background: linear-gradient(to right, #3b82f6, #8b5cf6);
+  border-radius: 24rpx;
+  padding: 40rpx;
+  margin-bottom: 24rpx;
+  overflow: hidden;
+}
+
+.banner-circle-1 {
+  position: absolute;
+  right: -40rpx;
+  top: -80rpx;
+  width: 160rpx;
+  height: 160rpx;
+  background-color: rgba(255, 255, 255, 0.1);
+  border-radius: 50%;
+}
+
+.banner-circle-2 {
+  position: absolute;
+  right: 80rpx;
+  bottom: -80rpx;
+  width: 128rpx;
+  height: 128rpx;
+  background-color: rgba(255, 255, 255, 0.1);
+  border-radius: 50%;
+}
+
+.banner-content {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+}
+
+.banner-icon {
+  width: 88rpx;
+  height: 88rpx;
+  background-color: rgba(255, 255, 255, 0.2);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 24rpx;
+}
+
+.banner-icon text {
+  font-size: 44rpx;
+}
+
+.banner-title {
+  display: block;
+  font-size: 36rpx;
+  font-weight: 700;
+  color: #ffffff;
+}
+
+.banner-subtitle {
+  display: block;
+  font-size: 28rpx;
+  color: rgba(255, 255, 255, 0.8);
+  margin-top: 4rpx;
+}
+
+/* 数据概览 */
+.stats-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16rpx;
+  margin-bottom: 24rpx;
+}
+
+.stat-card {
+  background-color: #ffffff;
+  border-radius: 24rpx;
+  padding: 28rpx;
+  display: flex;
+  align-items: center;
+  box-shadow: 0 2rpx 4rpx rgba(0, 0, 0, 0.05);
+  border: 2rpx solid #f3f4f6;
+}
+
+.dark .stat-card {
+  background-color: #1f2937;
+  border-color: #374151;
+}
+
+.stat-icon {
+  width: 80rpx;
+  height: 80rpx;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 20rpx;
+}
+
+.stat-icon text {
+  font-size: 36rpx;
+}
+
+.stat-icon.blue {
+  background-color: #dbeafe;
+}
+
+.dark .stat-icon.blue {
+  background-color: rgba(59, 130, 246, 0.2);
+}
+
+.stat-icon.red {
+  background-color: #fee2e2;
+}
+
+.dark .stat-icon.red {
+  background-color: rgba(239, 68, 68, 0.2);
+}
+
+.stat-info {
+  flex: 1;
+}
+
+.stat-label {
+  display: block;
+  font-size: 24rpx;
+  color: #6b7280;
+}
+
+.dark .stat-label {
+  color: #9ca3af;
+}
+
+.stat-value {
+  display: block;
+  font-size: 40rpx;
+  font-weight: 700;
+  color: #1f2937;
+}
+
+.dark .stat-value {
+  color: #ffffff;
+}
+
+/* 管理功能卡片 */
+.admin-card {
+  background-color: #ffffff;
+  border-radius: 24rpx;
+  box-shadow: 0 2rpx 4rpx rgba(0, 0, 0, 0.05);
+  border: 2rpx solid #f3f4f6;
+  overflow: hidden;
+  margin-bottom: 24rpx;
+}
+
+.dark .admin-card {
+  background-color: #1f2937;
+  border-color: #374151;
+}
+
+/* 标签栏 */
+.tabs {
+  display: flex;
+  border-bottom: 2rpx solid #f3f4f6;
+}
+
+.dark .tabs {
+  border-bottom-color: #374151;
+}
+
+.tab-item {
+  flex: 1;
+  padding: 24rpx;
+  text-align: center;
+  font-size: 28rpx;
+  color: #6b7280;
+  border-bottom: 4rpx solid transparent;
+  transition: all 0.2s;
+}
+
+.dark .tab-item {
+  color: #9ca3af;
+}
+
+.tab-item.active {
+  color: #ef4444;
+  border-bottom-color: #ef4444;
+  font-weight: 500;
+}
+
+/* 卡片内容 */
+.card-content {
+  padding: 24rpx;
+}
+
+.content-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 24rpx;
+  width: calc(100% + 24rpx);
+  box-sizing: border-box;
+}
+
+.content-header .create-btn {
+  flex-shrink: 0;
+  margin-right: 24rpx;
+}
+
+.content-title {
+  font-size: 32rpx;
+  font-weight: 700;
+  color: #1f2937;
+}
+
+.dark .content-title {
+  color: #ffffff;
+}
+
+/* 创建按钮 */
+.create-btn {
+  display: inline-flex !important;
+  align-items: center;
+  padding: 10rpx 16rpx;
+  background: linear-gradient(to right, #ef4444, #fb923c);
+  color: #ffffff;
+  font-size: 24rpx;
+  font-weight: 500;
+  border-radius: 12rpx;
+  border: none;
+  width: auto !important;
+  min-width: 0 !important;
+  white-space: nowrap;
+}
+
+.create-btn::after {
+  border: none;
+}
+
+.btn-icon {
+  font-size: 28rpx;
+  margin-right: 4rpx;
+}
+
+/* 加载状态 */
+.loading-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 64rpx;
+}
+
+.loading-spinner {
+  width: 64rpx;
+  height: 64rpx;
+  border: 4rpx solid #e5e7eb;
+  border-top-color: #ef4444;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* 活动列表 */
+.tournament-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16rpx;
+}
+
+.tournament-item {
+  display: flex;
+  align-items: center;
+  background-color: #f9fafb;
+  border-radius: 16rpx;
+  padding: 24rpx;
+  transition: background-color 0.2s;
+}
+
+.dark .tournament-item {
+  background-color: #374151;
+}
+
+.tournament-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.tournament-title-row {
+  display: flex;
+  align-items: center;
+  gap: 12rpx;
+  margin-bottom: 8rpx;
+}
+
+.tournament-name {
+  font-size: 28rpx;
+  font-weight: 600;
+  color: #1f2937;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.dark .tournament-name {
+  color: #ffffff;
+}
+
+.status-tag {
+  padding: 4rpx 16rpx;
+  border-radius: 9999rpx;
+  font-size: 20rpx;
+  font-weight: 700;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.tournament-meta {
+  font-size: 24rpx;
+  color: #6b7280;
+}
+
+.dark .tournament-meta {
+  color: #9ca3af;
+}
+
+.tournament-actions {
+  margin-left: 16rpx;
+}
+
+.action-btn {
+  padding: 16rpx;
+  border-radius: 12rpx;
+}
+
+.action-btn.delete {
+  background-color: #fef2f2;
+}
+
+.dark .action-btn.delete {
+  background-color: rgba(127, 29, 29, 0.2);
+}
+
+.action-btn text {
+  font-size: 28rpx;
+}
+
+/* 空状态 */
+.empty-state {
+  padding: 64rpx 32rpx;
+  text-align: center;
+}
+
+.empty-icon {
+  display: block;
+  font-size: 64rpx;
+  margin-bottom: 16rpx;
+}
+
+.empty-title {
+  display: block;
+  font-size: 32rpx;
+  font-weight: 600;
+  color: #1f2937;
+  margin-bottom: 8rpx;
+}
+
+.dark .empty-title {
+  color: #ffffff;
+}
+
+.empty-desc {
+  display: block;
+  font-size: 28rpx;
+  color: #6b7280;
+}
+
+.dark .empty-desc {
+  color: #9ca3af;
+}
+
+/* 用户列表 */
+.user-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16rpx;
+}
+
+.user-item {
+  display: flex;
+  align-items: center;
+  background-color: #f9fafb;
+  border-radius: 16rpx;
+  padding: 24rpx;
+}
+
+.dark .user-item {
+  background-color: #374151;
+}
+
+.user-avatar {
+  width: 80rpx;
+  height: 80rpx;
+  border-radius: 50%;
+  margin-right: 20rpx;
+  background-color: #e5e7eb;
+}
+
+.user-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.user-name {
+  display: block;
+  font-size: 28rpx;
+  font-weight: 500;
+  color: #1f2937;
+}
+
+.dark .user-name {
+  color: #ffffff;
+}
+
+.user-username {
+  display: block;
+  font-size: 24rpx;
+  color: #6b7280;
+}
+
+.dark .user-username {
+  color: #9ca3af;
+}
+
+.user-actions {
+  display: flex;
+  gap: 12rpx;
+}
+
+.action-btn.approve {
+  width: 64rpx;
+  height: 64rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #dcfce7;
+  color: #166534;
+  border-radius: 50%;
+}
+
+.dark .action-btn.approve {
+  background-color: rgba(20, 83, 45, 0.5);
+  color: #bbf7d0;
+}
+
+.action-btn.reject {
+  width: 64rpx;
+  height: 64rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #fee2e2;
+  color: #991b1b;
+  border-radius: 50%;
+}
+
+.dark .action-btn.reject {
+  background-color: rgba(127, 29, 29, 0.3);
+  color: #fecaca;
+}
+
+.action-btn.approve text,
+.action-btn.reject text {
+  font-size: 28rpx;
+  font-weight: 700;
+}
+
+/* 查看全部按钮 */
+.section-btn {
+  margin-top: 24rpx;
+}
+
+.view-all-btn {
+  width: 100%;
+  padding: 24rpx;
+  background-color: #f3f4f6;
+  color: #1f2937;
+  font-size: 28rpx;
+  border-radius: 16rpx;
+  border: 2rpx solid #e5e7eb;
+}
+
+.dark .view-all-btn {
+  background-color: #374151;
+  color: #ffffff;
+  border-color: #4b5563;
+}
+
+.view-all-btn::after {
+  border: none;
+}
+
+/* 设置列表 */
+.settings-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16rpx;
+}
+
+.setting-item {
+  display: flex;
+  align-items: flex-start;
+  background-color: #f9fafb;
+  border-radius: 16rpx;
+  padding: 24rpx;
+}
+
+.dark .setting-item {
+  background-color: #374151;
+}
+
+.setting-icon {
+  width: 80rpx;
+  height: 80rpx;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 20rpx;
+  flex-shrink: 0;
+}
+
+.setting-icon text {
+  font-size: 36rpx;
+}
+
+.setting-icon.blue {
+  background-color: #dbeafe;
+}
+
+.dark .setting-icon.blue {
+  background-color: rgba(59, 130, 246, 0.2);
+}
+
+.setting-icon.green {
+  background-color: #dcfce7;
+}
+
+.dark .setting-icon.green {
+  background-color: rgba(34, 197, 94, 0.2);
+}
+
+.setting-icon.purple {
+  background-color: #ede9fe;
+}
+
+.dark .setting-icon.purple {
+  background-color: rgba(139, 92, 246, 0.2);
+}
+
+.setting-icon.orange {
+  background-color: #ffedd5;
+}
+
+.dark .setting-icon.orange {
+  background-color: rgba(249, 115, 22, 0.2);
+}
+
+.setting-info {
+  flex: 1;
+  margin-right: 20rpx;
+}
+
+.setting-title {
+  display: block;
+  font-size: 28rpx;
+  font-weight: 600;
+  color: #1f2937;
+  margin-bottom: 8rpx;
+}
+
+.dark .setting-title {
+  color: #ffffff;
+}
+
+.setting-desc {
+  display: block;
+  font-size: 24rpx;
+  color: #6b7280;
+  line-height: 1.5;
+}
+
+.dark .setting-desc {
+  color: #9ca3af;
+}
+
+/* 系统通知卡片 */
+.notice-card {
+  background-color: #ffffff;
+  border-radius: 24rpx;
+  padding: 28rpx;
+  display: flex;
+  align-items: flex-start;
+  box-shadow: 0 2rpx 4rpx rgba(0, 0, 0, 0.05);
+  border: 2rpx solid #f3f4f6;
+}
+
+.dark .notice-card {
+  background-color: #1f2937;
+  border-color: #374151;
+}
+
+.notice-icon {
+  width: 64rpx;
+  height: 64rpx;
+  background-color: #ffedd5;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 20rpx;
+  flex-shrink: 0;
+}
+
+.dark .notice-icon {
+  background-color: rgba(251, 146, 60, 0.2);
+}
+
+.notice-icon text {
+  font-size: 32rpx;
+}
+
+.notice-content {
+  flex: 1;
+}
+
+.notice-title {
+  display: block;
+  font-size: 28rpx;
+  font-weight: 700;
+  color: #1f2937;
+  margin-bottom: 8rpx;
+}
+
+.dark .notice-title {
+  color: #ffffff;
+}
+
+.notice-desc {
+  display: block;
+  font-size: 26rpx;
+  color: #6b7280;
+  line-height: 1.5;
+}
+
+.dark .notice-desc {
+  color: #9ca3af;
+}
+
+.notice-highlight {
+  font-weight: 700;
+  color: #f97316;
+}
+
+/* 状态标签颜色 */
+.status-pre-registration {
+  background-color: #dbeafe;
+  color: #1e40af;
+}
+
+
+
+/* 底部安全区域 */
+.bottom-safe-area {
+  height: 100rpx;
+  padding-bottom: constant(safe-area-inset-bottom);
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+/* 活动日志入口样式 */
+.setting-item.clickable {
+  cursor: pointer;
+}
+
+.setting-icon.purple {
+  background-color: #f3e8ff;
+}
+
+.dark .setting-icon.purple {
+  background-color: rgba(168, 85, 247, 0.2);
+}
+
+.setting-arrow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #9ca3af;
+  font-size: 32rpx;
+}
+
+.dark .setting-arrow {
+  color: #6b7280;
+}
+
+/* 活动列表标题与筛选按钮 */
+.title-with-filter {
+  display: flex;
+  align-items: center;
+  gap: 16rpx;
+  flex-shrink: 0;
+}
+
+.filter-btn {
+  display: flex;
+  align-items: center;
+  gap: 6rpx;
+  padding: 8rpx 16rpx;
+  background-color: #f3f4f6;
+  border-radius: 20rpx;
+  font-size: 24rpx;
+  color: #6b7280;
+}
+
+.dark .filter-btn {
+  background-color: #374151;
+  color: #d1d5db;
+}
+
+.filter-icon {
+  font-size: 20rpx;
+}

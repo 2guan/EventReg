@@ -1,0 +1,138 @@
+<!--
+  登录页面
+  与网页版 Login.tsx 布局完全一致
+-->
+
+<view class="page {{theme === 'dark' ? 'dark' : ''}}">
+  <!-- 顶部导航 -->
+  <view class="header">
+    <view class="back-btn" bindtap="goBack">
+      <text class="icon-back">←</text>
+    </view>
+    <text class="header-title">登录</text>
+    <view class="theme-btn" bindtap="toggleTheme">
+      <text class="icon-theme">{{theme === 'light' ? '🌙' : '☀️'}}</text>
+    </view>
+  </view>
+  
+  <!-- 主内容区 -->
+  <view class="main-content">
+    <!-- Logo 和标题 -->
+    <view class="logo-section">
+      <view class="logo-container">
+        <text class="logo-icon">🏆</text>
+      </view>
+      <text class="app-title">有熊来集</text>
+      <text class="app-subtitle">专业的活动报名平台</text>
+    </view>
+    
+    <!-- 登录表单 -->
+    <view class="form-section">
+
+      <!-- 微信快捷登录 -->
+      <button class="wx-login-btn" bindtap="handleWxLogin" disabled="{{isSubmitting}}">
+
+      <text>微信快捷登录</text>
+      </button>
+      <!-- 分割线 -->
+      <view class="divider">
+        <view class="divider-line"></view>
+        <text class="divider-text">或</text>
+        <view class="divider-line"></view>
+      </view>
+      <!-- 用户名 -->
+      <view class="form-item">
+        <text class="form-label">用户名</text>
+        <view class="input-wrapper {{errors.username ? 'input-error' : ''}}">
+          <input 
+            class="form-input"
+            type="text"
+            placeholder="请输入用户名"
+            value="{{username}}"
+            bindinput="onUsernameInput"
+          />
+        </view>
+        <text wx:if="{{errors.username}}" class="error-text">{{errors.username}}</text>
+      </view>
+      
+      <!-- 密码 -->
+      <view class="form-item">
+        <text class="form-label">密码</text>
+        <view class="input-wrapper {{errors.password ? 'input-error' : ''}}">
+          <input 
+            class="form-input"
+            type="password"
+            placeholder="请输入密码"
+            value="{{password}}"
+            bindinput="onPasswordInput"
+          />
+        </view>
+        <text wx:if="{{errors.password}}" class="error-text">{{errors.password}}</text>
+      </view>
+      
+      <!-- 登录按钮 -->
+      <button 
+        class="submit-btn" 
+        bindtap="handleSubmit"
+        disabled="{{isSubmitting}}"
+      >
+        <text wx:if="{{isSubmitting}}">登录中...</text>
+        <text wx:else>登录</text>
+      </button>
+
+      
+      <!-- 注册链接 -->
+      <view class="register-link">
+        <text class="register-text">还没有账号？</text>
+        <text class="register-action" bindtap="goToRegister">立即注册</text>
+      </view>
+    </view>
+  </view>
+  
+  <!-- 微信资料获取模态框 -->
+  <view wx:if="{{showWxProfileModal}}" class="modal-overlay" catchtap="closeWxProfileModal">
+    <view class="wx-profile-modal" catchtap="stopPropagation">
+      <view class="modal-header">
+        <text class="modal-title">完善个人资料</text>
+        <view class="modal-close" bindtap="closeWxProfileModal">
+          <text>✕</text>
+        </view>
+      </view>
+      
+      <view class="modal-body">
+        <text class="modal-hint">请设置您的头像和昵称，用于在活动中展示</text>
+        
+        <!-- 头像选择 -->
+        <view class="wx-avatar-section">
+          <button class="wx-avatar-btn" open-type="chooseAvatar" bindchooseavatar="onChooseAvatar">
+            <image wx:if="{{wxAvatar}}" class="wx-avatar-preview" src="{{wxAvatar}}" mode="aspectFill" />
+            <view wx:else class="wx-avatar-placeholder">
+              <text class="avatar-icon">📷</text>
+            </view>
+          </button>
+          <text class="wx-avatar-hint">点击获取微信头像</text>
+        </view>
+        
+        <!-- 昵称输入 -->
+        <view class="wx-nickname-section">
+          <text class="section-label">昵称</text>
+          <input 
+            class="wx-nickname-input" 
+            type="nickname" 
+            placeholder="请点击获取微信昵称或输入昵称"
+            value="{{wxNickname}}"
+            bindinput="onNicknameChange"
+            bindblur="onNicknameBlur"
+          />
+        </view>
+      </view>
+      
+      <view class="modal-footer">
+        <button class="btn-cancel" bindtap="closeWxProfileModal">取消</button>
+        <button class="btn-confirm" bindtap="confirmWxProfile" disabled="{{!wxAvatar || !wxNickname}}">
+          确认登录
+        </button>
+      </view>
+    </view>
+  </view>
+</view>
